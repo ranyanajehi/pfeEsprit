@@ -1,0 +1,83 @@
+/* Navbar.css */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #050505;
+  padding: 10px 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.logo {
+  display: flex;
+  align-items:self-start;
+}
+
+.logo-img {
+  height: 40px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.links {
+  display: flex;
+  gap: 20px;
+}
+
+.links a {
+  color: rgb(143, 10, 232);
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.links a:hover {
+  color: #ff00dd;
+}
+
+.btn {
+  background-color: #ff00dd;
+  color: rgb(231, 221, 221);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #e7dee5;
+}
+
+.hamburger {
+  display: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: rgb(76, 52, 210);
+}
+
+.showmenu {
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: #eae0e0;
+  width: 100%;
+  padding: 10px;
+  box-shadow: 0 5px 10px rgba(4, 236, 112, 0.1);
+}
+
+@media (max-width: 768px) {
+  .navLinks {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}

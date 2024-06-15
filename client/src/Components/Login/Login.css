@@ -1,0 +1,87 @@
+/* No CSS *//*# sourceMappingURL=Login.css.map */.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  padding: 20px;
+}
+
+.centered-component {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ajustez en fonction de vos besoins */
+}
+.login-form {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-form h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.login-form p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ff00dd;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: #0056b3;
+}
+
+.non-inscrit {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.non-inscrit a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+}
+
+/* Styles pour les écrans plus petits */
+@media (max-width: 768px) {
+  .login-form {
+    padding: 15px;
+  }
+
+  .login-form h2 {
+    font-size: 20px;
+  }
+
+  .login-form p {
+    font-size: 14px;
+  }
+}
