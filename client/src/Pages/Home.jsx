@@ -7,14 +7,11 @@ import MessageForm from '../Components/MessageForm/messageForm';
 
 const Home = () => {
   return (
-    <>,
-      <Description />
+    <>
+    <Description />
     <Presentation  />
     <StudentJob/>
     <MessageForm/>
-
- 
-
     </>
     )
   

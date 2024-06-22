@@ -41,23 +41,22 @@ const Footer = () => {
 
   return (
     <>
-      <footer className={"container"}>
-        <hr />
-        <div className="content">
+      <footer >
+        <div className="content" style={{display:"flex",justifyContent:"space-around",alignItems:"flex-startz",marginTop:"50px",width:"70%",marginRight:"auto",marginLeft:"auto"}}>
           <div>
             <img src={logo} alt="logo" className="logo-img"/>
           </div>
           <div>
-            <h4>Services</h4>
-            <ul>
-              <Link to={"/"}>Acceuil</Link>
-              <Link to={"/appointment"}>Rendez-vous</Link>
-              <Link to={"/about"}>A propos</Link>
+            <h4 className="footer-title">Services</h4>
+            <ul style={{display:"flex",flexDirection:"column"}}>
+              <Link className="footer-link" to={"/"}>Acceuil</Link>
+              <Link className="footer-link" to={"/appointment"}>Rendez-vous</Link>
+              <Link  className="footer-link" to={"/about"}>A propos</Link>
             </ul>
           </div>
           <div>
-            <h4>Heur de travail</h4>
-            <ul>
+            <h4 className="footer-title">Heur de travail</h4>
+            <ul className="list-time">
               {hours.map((element) => (
                 <li key={element.id}>
                   <span>{element.day}</span>
@@ -67,16 +66,16 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4>Contact</h4>
-            <div>
+            <h4 className="footer-title">Contact</h4>
+            <div className="elem">
               <FaPhone />
               <span>+216 71 85 85 85</span>
             </div>
-            <div>
+            <div  className="elem">
               <MdEmail />
               <span>hello@rbk.tn</span>
             </div>
-            <div>
+            <div  className="elem">
               <FaLocationArrow />
               <span>B24, Technopark Elghazela ariana, 2088, Tunisie</span>
             </div>

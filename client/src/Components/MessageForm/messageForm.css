@@ -12,19 +12,17 @@
 
 /* Formulaire */
 .form-component {
-    padding: 40px 30px;
-    background-color: #fff;
+    padding: 40px;
+    background-color: white;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
-    max-width: 600px;
-    width: 100%;
+    width:500px;
 }
 
 /* Titre du formulaire */
 .form-component h2 {
     margin-bottom: 20px;
     font-size: 24px;
+    text-align: center;
     color: #e30a8d;
 }
 

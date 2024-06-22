@@ -109,9 +109,9 @@ Image:"/assets/Capture16.PNG"
         },
       };
   return (
-    <div>
-     <div className="container students">
-        <h2>Nos Eleves</h2>
+    <div style={{marginTop:"30px"}}>
+     <div style={{width:"80%",marginLeft:"auto",marginRight:"auto",textAlign:"center"}}>
+        <h2 style={{marginBottom:"30px"}}>Nos Etudiant</h2>
         <Carousel
           responsive={responsive}
           removeArrowOnDeviceType={[

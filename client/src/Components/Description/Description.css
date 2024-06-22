@@ -9,8 +9,9 @@
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 10px;
+  display: flex;
+  justify-content: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
 }
 
 .banner {
@@ -43,12 +44,9 @@
   transition: background-color 0.3s ease;
 }
 
-.button-container button:hover {
-  background-color: #0056b3;
-}
 
-.animated-image {
-  width: 100%;
-  height: auto;
-  max-width: 400px;
+
+.image-home{
+  width: 50%;
+  height: 100vh;
 }

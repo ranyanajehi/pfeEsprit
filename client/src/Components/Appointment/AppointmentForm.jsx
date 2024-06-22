@@ -22,7 +22,7 @@ const AppointmentForm = () => {
         const { data } = await axios.get("http://127.0.0.1:4000/api/v1/appointment/getDisabledDates");
         setDisabledDates(data.disabledDates);
       } catch (error) {
-        toast.error("Failed to load disabled dates");
+        // toast.error("Failed to load disabled dates");
       }
     };
     fetchDisabledDates();
@@ -71,11 +71,11 @@ const AppointmentForm = () => {
   };
 
   return (
-    <div className="presentation container">
-      <div className="container form-component appointment-form">
+    <div className="presentation" >
+      <div className="form-component" style={{width:"500px"}}>
         <div className="appointment-form-wrapper">
           <h1>Réservez Votre Place</h1>
-          <h3>Commencez votre carrière</h3>
+          <h3 style={{marginBottom:"20px"}}>Commencez votre carrière</h3>
           <form onSubmit={handleAppointment} className="appointment-form">
             <div className="form-group">
               <input
@@ -119,15 +119,15 @@ const AppointmentForm = () => {
                 }}
               />
             </div>
-            <div className="form-group">
-              <select value={genre} onChange={(e) => setGenre(e.target.value)}>
+            <div className="form-group" >
+              <select style={{padding:"10px",fontWeight:"500",fontSize:"15px",borderColor:"#CCCC"}} value={genre} onChange={(e) => setGenre(e.target.value)}>
                 <option value="">Sélectionner votre genre</option>
                 <option value="Homme">Homme</option>
                 <option value="Femme">Femme</option>
               </select>
             </div>
             <div className="form-group">
-              <select value={level} onChange={(e) => setLevel(e.target.value)}>
+              <select style={{padding:"10px",fontWeight:"500",fontSize:"15px",borderColor:"#CCCC"}} value={level} onChange={(e) => setLevel(e.target.value)}>
                 <option value="">Sélectionner le niveau d'anglais</option>
                 <option value="A1">A1 - Débutant</option>
                 <option value="A2">A2 - Élémentaire</option>
@@ -146,8 +146,10 @@ const AppointmentForm = () => {
             <div
               style={{
                 gap: "10px",
-                justifyContent: "flex-end",
+                display:"flex",
+                justifyContent:"right",
                 flexDirection: "row",
+            
               }}
             >
               <p style={{ marginBottom: 0 }}>Avez vous visité avant?</p>
@@ -158,10 +160,10 @@ const AppointmentForm = () => {
                 style={{ flex: "none", width: "25px" }}
               />
             </div>
-            <p style={{ marginBottom: 0 }}>
+            <p style={{textAlign:"center"}}>
               Non Inscrit? <Link to={"/register"} style={{ textDecoration: "none", alignItems: "center" }}>Inscrire maintenant</Link>
             </p>
-            <button style={{ margin: "0 auto" }}>Envoyer</button>
+            <button id="sendBtn" >Envoyer</button>
           </form>
         </div>
       </div>

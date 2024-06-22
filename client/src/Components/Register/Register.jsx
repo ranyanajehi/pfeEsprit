@@ -6,22 +6,22 @@ import { Context } from '../../main';
 
 const Register = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
-  const[firstName,setFirstName] =useState("");
-  const[lastName,setLastName] =useState("");
-  const[email,setEmail] =useState("");
-  const[phone,setPhone] =useState("");
-  const[genre,setGenre] =useState("");
-  const[password,setPassword] =useState("");
-  const[levelEnglish,setLevelEnglish] =useState("");
-  const navigateTo=useNavigate()
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [genre, setGenre] = useState("");
+  const [password, setPassword] = useState("");
+  const [levelEnglish, setLevelEnglish] = useState("");
+  const navigateTo = useNavigate()
 
-  const handleRegister= async(e)=>{
+  const handleRegister = async (e) => {
     e.preventDefault()
     try {
       await axios
         .post(
           "http://127.0.0.1:4000/api/v1/user/student/register",
-          { firstName, lastName, email,phone, genre,password,levelEnglish, role: "Student" },
+          { firstName, lastName, email, phone, genre, password, levelEnglish, role: "Student" },
           {
             withCredentials: true,
             headers: { "Content-Type": "application/json" },
@@ -43,22 +43,25 @@ const Register = () => {
     }
   };
 
-  if(isAuthenticated){
-    return <Navigate to={"/"}/>
+  if (isAuthenticated) {
+    return <Navigate to={"/"} />
   }
 
   return (
     <div className="centered-component">
-      <div className="container form-component register-form">
+      <div className="form-component ">
         <h2>S'inscrire</h2>
         <form onSubmit={handleRegister}>
           <div>
-            <input type='text' placeholder='Nom' value={firstName} onChange={(e)=>setFirstName(e.target.value)} />
-            <input type='text' placeholder='Prénom' value={lastName} onChange={(e)=>setLastName(e.target.value)} />
-            <input type='email' placeholder='email' value={email} onChange={(e)=>setEmail(e.target.value)}/>
-            <input type='tel' placeholder='Num de Téléphone' value={phone} onChange={(e)=>setPhone(e.target.value)} />
-            <div>
-              <label>
+            <input type='text' placeholder='Nom' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+            <input type='text' placeholder='Prénom' value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            <input type='email' placeholder='email' value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input type='tel' placeholder='Num de Téléphone' value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <div >
+              <div style={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row" }}>
+                <label>
+                  Homme
+                </label>
                 <input
                   type="radio"
                   name="genre"
@@ -66,18 +69,21 @@ const Register = () => {
                   checked={genre === "Homme"}
                   onChange={(e) => setGenre(e.target.value)}
                 />
-                Homme
+              </div>
+              <div style={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row" }}>
+             
+              
+                 <label>
+                Femme
               </label>
-              <label>
-                <input
+              <input
                   type="radio"
                   name="genre"
                   value="Femme"
                   checked={genre === "Femme"}
                   onChange={(e) => setGenre(e.target.value)}
                 />
-                Femme
-              </label>
+              </div>
             </div>
             <select value={levelEnglish} onChange={(e) => setLevelEnglish(e.target.value)}>
               <option value="">Niveau d'Anglais</option>
@@ -102,7 +108,7 @@ const Register = () => {
               Connecter
             </Link></p>
           </div>
-          <div style={{ justifyContent: "center", alignItems: "center" }}>
+          <div  className="login-form" style={{ justifyContent: "center", alignItems: "center", display: "flex", marginTop: "30px" }}>
             <button type='submit'>Enregistrer</button>
           </div>
         </form>

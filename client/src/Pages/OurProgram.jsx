@@ -6,7 +6,6 @@ const OurProgram = () => {
   return (
     <div>
       <AboutUs/>
-   
     </div>
   )
 }
