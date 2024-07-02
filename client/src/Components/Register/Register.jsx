@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Context } from '../../main';
+import "./Register.css"; 
 
 const Register = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
@@ -13,76 +14,86 @@ const Register = () => {
   const [genre, setGenre] = useState("");
   const [password, setPassword] = useState("");
   const [levelEnglish, setLevelEnglish] = useState("");
-  const navigateTo = useNavigate()
+  const [birthdate, setBirthdate] = useState("");
+  const [studentAvatar, setStudentAvatar] = useState(null);
+  const navigateTo = useNavigate();
 
   const handleRegister = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+
+    const formData = new FormData();
+    
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('genre', genre);
+    formData.append('password', password);
+    formData.append('levelEnglish', levelEnglish);
+    formData.append('birthdate', birthdate);
+    formData.append('studentAvatar', studentAvatar);
+    formData.append('role', 'Student');
+
     try {
-      await axios
-        .post(
-          "http://127.0.0.1:4000/api/v1/user/student/register",
-          { firstName, lastName, email, phone, genre, password, levelEnglish, role: "Student" },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          toast.success(res.data.message);
-          setIsAuthenticated(true);
-          navigateTo("/login");
-          setFirstName("");
-          setLastName("");
-          setEmail("");
-          setPhone("");
-          setGenre("");
-          setPassword("");
-        });
+      const response = await axios.post(
+        'http://127.0.0.1:4000/api/v1/user/student/register',
+        formData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      toast.success(response.data.message);
+
+      // Réinitialiser l'état de l'authentification
+      setIsAuthenticated(false);
+
+      // Redirection vers la page de login après un enregistrement réussi
+      navigateTo('/login');
+
+      // Réinitialisation des champs du formulaire
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPhone('');
+      setGenre('');
+      setPassword('');
+      setLevelEnglish('');
+      setBirthdate('');
+      setStudentAvatar(null);
+      
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error('An error occurred. Please try again.');
+      }
     }
   };
 
-  if (isAuthenticated) {
-    return <Navigate to={"/"} />
-  }
+  const handlePhotoChange = (e) => {
+    setStudentAvatar(e.target.files[0]);
+  };
 
   return (
     <div className="centered-component">
-      <div className="form-component ">
+      <div className="form-componentt">
         <h2>S'inscrire</h2>
         <form onSubmit={handleRegister}>
           <div>
             <input type='text' placeholder='Nom' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
             <input type='text' placeholder='Prénom' value={lastName} onChange={(e) => setLastName(e.target.value)} />
-            <input type='email' placeholder='email' value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input type='email' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
             <input type='tel' placeholder='Num de Téléphone' value={phone} onChange={(e) => setPhone(e.target.value)} />
-            <div >
-              <div style={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row" }}>
-                <label>
-                  Homme
-                </label>
-                <input
-                  type="radio"
-                  name="genre"
-                  value="Homme"
-                  checked={genre === "Homme"}
-                  onChange={(e) => setGenre(e.target.value)}
-                />
+            <input type='date' placeholder='Date de Naissance' value={birthdate} onChange={(e) => setBirthdate(e.target.value)} />
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
+                <label>Homme</label>
+                <input type="radio" name="genre" value="Homme" checked={genre === 'Homme'} onChange={(e) => setGenre(e.target.value)} />
               </div>
-              <div style={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row" }}>
-             
-              
-                 <label>
-                Femme
-              </label>
-              <input
-                  type="radio"
-                  name="genre"
-                  value="Femme"
-                  checked={genre === "Femme"}
-                  onChange={(e) => setGenre(e.target.value)}
-                />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
+                <label>Femme</label>
+                <input type="radio" name="genre" value="Femme" checked={genre === 'Femme'} onChange={(e) => setGenre(e.target.value)} />
               </div>
             </div>
             <select value={levelEnglish} onChange={(e) => setLevelEnglish(e.target.value)}>
@@ -94,27 +105,19 @@ const Register = () => {
               <option value="C1">C1</option>
               <option value="C2">C2</option>
             </select>
-            <input
-              type='password'
-              placeholder='Mot de passe'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <input type='password' placeholder='Mot de passe' value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input type='file' onChange={handlePhotoChange} />
           </div>
-          <div style={{ gap: "10px", justifyContent: "flex-end", flexDirection: "row" }}>
-            <p style={{ marginBottom: 0 }}>Déjà inscrit? <Link to={"/login"}
-              style={{ textDecoration: "none", color: "#271776ca" }}
-            >
-              Connecter
-            </Link></p>
+          <div style={{ gap: '10px', justifyContent: 'flex-end', flexDirection: 'row' }}>
+            <p style={{ marginBottom: 0 }}>Déjà inscrit? <Link to="/login" style={{ textDecoration: 'none', color: '#271776ca' }}>Connecter</Link></p>
           </div>
-          <div  className="login-form" style={{ justifyContent: "center", alignItems: "center", display: "flex", marginTop: "30px" }}>
-            <button type='submit'>Enregistrer</button>
+          <div className="login-form" style={{ justifyContent: 'center', alignItems: 'center', display: 'flex', marginTop: '30px' }}>
+            <button type='submit' className="pink-button">Enregistrer</button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default Register
+export default Register;

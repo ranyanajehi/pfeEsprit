@@ -28,6 +28,10 @@ const jobSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    email:{
+        type:String,
+        required:true,
+    },
     jobType: {
         type: ObjectId,
         ref: "JobType",

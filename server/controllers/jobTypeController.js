@@ -37,12 +37,11 @@ export const getAllTypeJob = catchAsyncErrors(async(req,res,next)=>{
     }
 )
 
-//Update type job 
+
 
 export const updateJobType = catchAsyncErrors(async (req, res, next) => {
-    const typeId = req.params.id; // Assurez-vous que c'est bien `type_id`
-    
-    console.log("ID de type d'emploi reçu:", typeId);
+    const typeId = req.params.id; 
+
 
     if (!typeId) {
         return next(new ErrorHandler("ID de type d'emploi non fourni", 400));

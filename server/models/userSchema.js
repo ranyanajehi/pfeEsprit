@@ -53,10 +53,16 @@ const userSchema = new mongoose.Schema({
         enum:["Admin","Student"]
 
     },
+    status: {
+        type: String,
+        enum: ["Pending", "Accepted", "Rejected"],
+        default: "Pending"
+      },
 
     studentAvatar:{
-       public_id:String,
-        url:String,
+   type: String,
+   required:true
+       
 
    },
 

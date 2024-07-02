@@ -6,6 +6,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
+import "./aa.css";
 
 
 
@@ -54,7 +55,7 @@ const AddNewAdmin = () => {
     <section className="page">
       <section className="container form-component add-admin-form">
       <img src="/logo.png" alt="logo" className="logo"/>
-        <h1 className="form-title">Ajout nouveau admin</h1>
+        <h1 className="form-title">Nouveau admin</h1>
         <form onSubmit={handleAddNewAdmin}>
           <div>
             <input

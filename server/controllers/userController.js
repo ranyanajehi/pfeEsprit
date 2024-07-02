@@ -2,53 +2,134 @@ import {catchAsyncErrors} from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler, { errorMiddleware } from "../middlewares/errorMiddleware.js";
 import {generateToken} from "../utils/jwtToken.js"
 import {User } from "../models/userSchema.js";
-import cloudinary from "cloudinary";
 
-export const studentRegister =  catchAsyncErrors(async(req,res,next)=>{
-    const {firstName,lastName,email,phone,password,genre,role,levelEnglish}= req.body;
-    if (
-        !firstName ||
-        !levelEnglish||
-        !lastName||
-        !email||
-         !phone||
-          !password ||
-          !genre || 
-          !role)
-    {
-        return next (new ErrorHandler("Remplir tout les champs SVP",400));
-    }
-    let user = await User.findOne({ email });
-    if (user ){
-        return next(new ErrorHandler("Student est deja enregistré!",400));
-    }
-  
-    user = await User.create({
-        firstName,
-        lastName,
-        email,
-        phone,
-        levelEnglish,
-        password,
-        genre,
-        role:"Student",
 
-    });
-    generateToken(user,"Client enregistré",200, res);
- 
+
+
+export const studentRegister = catchAsyncErrors(async (req, res, next) => {
+  const { firstName, lastName, email, phone, password, genre, confirmPassword,levelEnglish } = req.body;
+  const image= req.file.filename;
+
+  if (!firstName || !lastName || !email || !phone || !password || !genre ||!confirmPassword ||!levelEnglish ) {
+    return next(new ErrorHandler('Remplir tous les champs SVP', 400));
+  }
+  if (password !== confirmPassword) {
+    return next(new ErrorHandler('Les mots de passe ne correspondent pas', 400));
+}
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    phone,
+    levelEnglish,
+    password,
+    genre,
+    role: 'Student',
+    studentAvatar: image,
+    status: 'Pending' // Définit le statut par défaut à "Pending"
+  });
+
+  res.status(201).json({
+    success: true,
+    message: 'Client enregistré',
+    user
+  });
+  generateToken(user, 'Client enregistré', 200, res);
 
 });
 
 
+
+
+
+
+
+
+
+
+
+// Fonction pour obtenir les étudiants en attente
+export const getPendingStudents = catchAsyncErrors(async (req, res, next) => {
+  const pendingStudents = await User.find({ status: 'Pending', role: 'Student' });
+
+  res.status(200).json({
+    success: true,
+    pendingStudents
+  });
+});
+// Fonction pour mettre à jour le statut d'un étudiant
+export const updateStudentStatus = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!['Pending', 'Accepted', 'Rejected'].includes(status)) {
+    return next(new ErrorHandler('Statut invalide', 400));
+  }
+
+  const student = await User.findByIdAndUpdate(id, { status }, { new: true });
+
+  if (!student) {
+    return next(new ErrorHandler('Étudiant non trouvé', 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    student
+  });
+});
+
+
+
+export const getAcceptedStudents = async (req, res) => {
+  try {
+      const acceptedStudents = await User.find({ status: 'Accepted', role: 'Student' });
+
+      res.status(200).json({ success: true, count: acceptedStudents.length, data: acceptedStudents });
+  } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+  }
+};
+// update Student 
+export const updateStudent = catchAsyncErrors(async (req, res, next) => {
+  const { firstName, lastName, email, phone, password, genre, levelEnglish } = req.body;
+
+  // Vérifiez que l'utilisateur existe
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(new ErrorHandler('Utilisateur non trouvé', 404));
+  }
+
+  // Mettre à jour les champs de l'utilisateur
+  user.firstName = firstName || user.firstName;
+  user.lastName = lastName || user.lastName;
+  user.email = email || user.email;
+  user.phone = phone || user.phone;
+  user.password = password || user.password;
+  user.genre = genre || user.genre;
+  user.levelEnglish = levelEnglish || user.levelEnglish;
+
+  // Mettre à jour l'image si un nouveau fichier est téléversé
+  if (req.file) {
+    user.studentAvatar = req.file.filename;
+  }
+
+  // Sauvegarder les modifications
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Informations mises à jour avec succès',
+    user
+  });
+});
+
 export const login = catchAsyncErrors(async(req,res,next)=>{
-    const {email,password,confirmPassword,role   }=req.body;
-   if(!email || !password || !confirmPassword || !role)
+    const {email,password,role   }=req.body;
+   if(!email || !password ||  !role)
         {
             return next (new ErrorHandler("Veuillez fournir tous les détails.",400))}
 
-            if (password !== confirmPassword) {
-                return next (new ErrorHandler("Le mot de passe ne correspondent pas!",400))
-            }
+         
 
             const user = await User.findOne({ email }).select("+password");
             if(!user){

@@ -11,6 +11,8 @@ import SideBar from './components/SideBar/SideBar.jsx';
 import "./App.css";
 import Students from './components/Students/Students.jsx';
 import Dashbord from "./components/Dashbord/Dashbord.jsx";
+import JobOffer from "./components/JobOffer/JobOffer.jsx";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   const { isAuthenticated, setIsAuthenticated, setUser } = useContext(Context);
@@ -48,6 +50,8 @@ const App = () => {
           <Route path="/admin/addnew" element={isAuthenticated ? <AddNewAdmin /> : <Navigate to="/login" />} />
           <Route path="/messages" element={isAuthenticated ? <Messages /> : <Navigate to="/login" />} />
           <Route path="/students" element={isAuthenticated ? <Students /> : <Navigate to="/login" />} />
+          <Route path="/job" element={isAuthenticated ? <JobOffer /> : <Navigate to="/login" />} />
+
         </Routes>
         <ToastContainer position="top-center" />
       </Router>

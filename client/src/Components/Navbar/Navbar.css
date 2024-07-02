@@ -1,19 +1,27 @@
-.navbar{
-  padding:10px 50px ;
+/* Navbar Styles */
+.navbar {
+  padding: 10px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333; /* Example background color */
 }
 
+/* Navigation Links */
 .navLink {
   text-decoration: none;
   color: white;
   font-weight: 700;
   transition-duration: 0.7s;
   font-size: 20px;
+  margin: 0 15px;
 }
 
 .navLink:hover {
   transform: scale(1.1);
 }
 
+/* Login Button */
 .loginBtn {
   padding: 10px 20px;
   background: white;
@@ -21,12 +29,47 @@
   font-size: 20px;
   font-weight: 500;
   border-radius: 30px;
-   transition-duration: 0.5s;
-   color: #ff007b;
+  transition-duration: 0.5s;
+  color: #ff007b;
 }
+
 .loginBtn:hover {
   color: white;
   background-color: #ff007b;
-  border: 2px solid white ;
+  border: 2px solid white;
   cursor: pointer;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 20px;
+    flex-direction: column;
+  }
+
+  .navLink {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+
+  .loginBtn {
+    font-size: 18px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  .navLink {
+    font-size: 16px;
+    margin: 8px 0;
+  }
+
+  .loginBtn {
+    font-size: 16px;
+    padding: 6px 12px;
+  }
 }

@@ -55,7 +55,6 @@ const AppointmentForm = () => {
         }
       );
       toast.success(data.message);
-      // Réinitialiser les champs après la soumission réussie
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -71,8 +70,8 @@ const AppointmentForm = () => {
   };
 
   return (
-    <div className="presentation" >
-      <div className="form-component" style={{width:"500px"}}>
+    <div className="appotment" >
+      <div className="form-componentt" style={{width:"500px" }}>
         <div className="appointment-form-wrapper">
           <h1>Réservez Votre Place</h1>
           <h3 style={{marginBottom:"20px"}}>Commencez votre carrière</h3>

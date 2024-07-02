@@ -1,35 +1,80 @@
-
-@media (max-width: 700px) {
-  .container {
-    padding: 0 20px;
-  }
-}
-.biography {
+.descriptionn {
   display: flex;
-  gap: 50px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+  flex-wrap: wrap;
+  padding: 20px;
+  background-color: rgb(255, 255, 255);
+
+
 }
-.biography .banner:first-child {
-  flex: 1;
+
+.video-containerr {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
 }
-.biography .banner:last-child {
-  flex: 1;
+.colour{
+  color: rgb(255, 0, 123) ;
+}
+
+.videoo {
+  width: 100%;
+  height: auto;
+  max-width: 600x;
+  height: 315px; 
+}
+.text-containerr {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  width: 100%;
+  max-width: 560px;
+  padding: 20px;
+  text-align: left;
+
 }
-.biography .banner h3 {
-  font-weight: 700;
-  letter-spacing: 3px;
+
+.text-containerr h1 {
+  font-size: 35px;
+  margin-bottom: 20px;
 }
-.biography .banner p:first-child {
-  font-size: 24px;
-  letter-spacing: 2px;
+p {
+  font-family: "Montserrat", sans-serif;
 }
-@media (max-width: 925px) {
-  .biography {
-    flex-direction: column-reverse;
+.text-containerr p {
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 450; /* Bold */
+}
+
+
+@media (min-width: 768px){
+  .description {
+    flex-direction: row;
+    padding: 50px;
+  }
+
+  .video-containerr, .text-containerr {
+    width: 50%;
+  }
+
+  .video-containerr {
+    justify-content: flex-start;
+  }
+
+  .text-containerr {
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .videoo {
+    height:350px; /* Ajustez cette valeur pour augmenter la hauteur de la vidéo */
   }
 }

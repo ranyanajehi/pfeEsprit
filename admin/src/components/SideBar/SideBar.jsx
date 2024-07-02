@@ -10,6 +10,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { PiStudentBold } from "react-icons/pi";
+import {FaBriefcase} from "react-icons/fa";
 
 
 
@@ -57,7 +58,10 @@ const SideBar = () => {
       navigateTo("/admin/addnew");
       setShow(!show);
     };
-  
+  const gotoJobPage=()=>{
+    navigateTo("/job");
+    setShow(!show);
+  }
     return (
       <>
          <nav
@@ -69,6 +73,7 @@ const SideBar = () => {
             <PiStudentBold onClick={gotoDoctorsPage}/>
          
             <MdAddModerator onClick={gotoAddNewAdmin} />
+            <FaBriefcase   onClick={gotoJobPage}/>
             <AiFillMessage onClick={gotoMessagesPage} />
             <RiLogoutBoxFill onClick={handleLogout} />
           </div>

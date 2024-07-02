@@ -1,6 +1,70 @@
-/* No CSS *//*# sourceMappingURL=Register.css.map */.centered-component {
+.centered-component {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Ajustez en fonction de vos besoins */
+ 
+  background-color: #f7f7f7;
+}
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  margin-bottom: 50px;
+}
+
+.form-componenttt {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 100%;
+  border: 1px solid #ddd;
+}
+
+.form-componentt h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  text-align: center;
+  color: #333;
+}
+
+.form-componentt input,
+.form-componentt select {
+  width: calc(100% - 20px);
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.form-componentt input[type="radio"] {
+  margin: 0 5px;
+}
+
+.pink-button {
+  background-color: #ff69b4;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pink-button:hover {
+  background-color: #ff85c2;
+}
+
+.login-form p {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.login-form a {
+  color: #ff69b4;
+  text-decoration: none;
+}
+
+.login-form a:hover {
+  text-decoration: underline;
 }
