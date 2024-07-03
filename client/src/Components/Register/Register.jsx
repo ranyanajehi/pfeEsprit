@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { Context } from '../../main';
+import React, { useContext, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { Context } from "../../main";
 
 const Register = () => {
-  const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+  const { token, setToken } = useContext(Context);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,18 +13,26 @@ const Register = () => {
   const [genre, setGenre] = useState("");
   const [password, setPassword] = useState("");
   const [levelEnglish, setLevelEnglish] = useState("");
-  const navigateTo = useNavigate()
+  const navigateTo = useNavigate();
 
   const handleRegister = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       await axios
         .post(
-          "http://127.0.0.1:4000/api/v1/user/student/register",
-          { firstName, lastName, email, phone, genre, password, levelEnglish, role: "Student" },
+          "http://localhost:4000/api/v1/user/student/register",
+          {
+            firstName,
+            lastName,
+            email,
+            phone,
+            genre,
+            password,
+            levelEnglish,
+            role: "Student",
+          },
           {
             withCredentials: true,
-            headers: { "Content-Type": "application/json" },
           }
         )
         .then((res) => {
@@ -44,7 +52,7 @@ const Register = () => {
   };
 
   if (isAuthenticated) {
-    return <Navigate to={"/"} />
+    return <Navigate to={"/"} />;
   }
 
   return (
@@ -53,15 +61,40 @@ const Register = () => {
         <h2>S'inscrire</h2>
         <form onSubmit={handleRegister}>
           <div>
-            <input type='text' placeholder='Nom' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-            <input type='text' placeholder='Prénom' value={lastName} onChange={(e) => setLastName(e.target.value)} />
-            <input type='email' placeholder='email' value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type='tel' placeholder='Num de Téléphone' value={phone} onChange={(e) => setPhone(e.target.value)} />
-            <div >
-              <div style={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row" }}>
-                <label>
-                  Homme
-                </label>
+            <input
+              type="text"
+              placeholder="Nom"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Prénom"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+            <input
+              type="email"
+              placeholder="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="tel"
+              placeholder="Num de Téléphone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <label>Homme</label>
                 <input
                   type="radio"
                   name="genre"
@@ -70,13 +103,16 @@ const Register = () => {
                   onChange={(e) => setGenre(e.target.value)}
                 />
               </div>
-              <div style={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "row" }}>
-             
-              
-                 <label>
-                Femme
-              </label>
-              <input
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <label>Femme</label>
+                <input
                   type="radio"
                   name="genre"
                   value="Femme"
@@ -85,7 +121,10 @@ const Register = () => {
                 />
               </div>
             </div>
-            <select value={levelEnglish} onChange={(e) => setLevelEnglish(e.target.value)}>
+            <select
+              value={levelEnglish}
+              onChange={(e) => setLevelEnglish(e.target.value)}
+            >
               <option value="">Niveau d'Anglais</option>
               <option value="A1">A1</option>
               <option value="A2">A2</option>
@@ -95,26 +134,44 @@ const Register = () => {
               <option value="C2">C2</option>
             </select>
             <input
-              type='password'
-              placeholder='Mot de passe'
+              type="password"
+              placeholder="Mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div style={{ gap: "10px", justifyContent: "flex-end", flexDirection: "row" }}>
-            <p style={{ marginBottom: 0 }}>Déjà inscrit? <Link to={"/login"}
-              style={{ textDecoration: "none", color: "#271776ca" }}
-            >
-              Connecter
-            </Link></p>
+          <div
+            style={{
+              gap: "10px",
+              justifyContent: "flex-end",
+              flexDirection: "row",
+            }}
+          >
+            <p style={{ marginBottom: 0 }}>
+              Déjà inscrit?{" "}
+              <Link
+                to={"/login"}
+                style={{ textDecoration: "none", color: "#271776ca" }}
+              >
+                Connecter
+              </Link>
+            </p>
           </div>
-          <div  className="login-form" style={{ justifyContent: "center", alignItems: "center", display: "flex", marginTop: "30px" }}>
-            <button type='submit'>Enregistrer</button>
+          <div
+            className="login-form"
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+              marginTop: "30px",
+            }}
+          >
+            <button type="submit">Enregistrer</button>
           </div>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;
