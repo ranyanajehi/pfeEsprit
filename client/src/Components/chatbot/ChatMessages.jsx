@@ -1,6 +1,15 @@
 import React, { useEffect, useRef } from "react";
-
-const ChatMessages = ({ chat, handleFormSubmit, messageInputRef }) => {
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { byPrefixAndName } from "@awesome.me/kit-KIT_CODE/icons";
+import { faUpload } from "@fortawesome/free-solid-svg-icons";
+const ChatMessages = ({
+  chat,
+  handleFormSubmit,
+  messageInputRef,
+  handleIconClick,
+  fileInputRef,
+  handleFileChange,
+}) => {
   const messageWrapRef = useRef(null);
   //   const messageInputRef = useRef(null);
 
@@ -40,6 +49,19 @@ const ChatMessages = ({ chat, handleFormSubmit, messageInputRef }) => {
                 ref={messageInputRef}
                 autoComplete="off"
               />
+              <div>
+                <FontAwesomeIcon
+                  icon={faUpload}
+                  style={{ color: "#ffb6c1", fontSize: "3rem" }}
+                  onClick={handleIconClick}
+                />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden-file-input"
+                  onChange={handleFileChange}
+                />
+              </div>
               <input type="submit" value="Send" />
             </form>
           </footer>

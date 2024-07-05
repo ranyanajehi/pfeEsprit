@@ -1,8 +1,19 @@
-import React, { useState, useRef } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useContext,
+} from "react";
 import ChatList from "./ChatList.jsx";
 import ChatMessages from "./ChatMessages.jsx";
+import { socket } from "../../helpers/socket.js";
+import { Context } from "../../main.jsx";
+
 import "./chat.css";
 const MainChat = () => {
+  const { token, setToken } = useContext(Context);
+
   const [chats, setChats] = useState([
     {
       id: 0,
@@ -58,6 +69,50 @@ const MainChat = () => {
       ],
     },
   ]);
+
+  useEffect(() => {
+    // // Fetch initial chat messages and notifications
+    // axios
+    //   .get("http://localhost:4000/api/v1/chats")
+    //   .then((response) => setMessages(response.data))
+    //   .catch((error) => console.error(error));
+
+    // axios
+    //   .get("http://localhost:3001/api/notifications")
+    //   .then((response) => setNotifications(response.data))
+    //   .catch((error) => console.error(error));
+
+    // Listen for chat messages
+    socket.on("chat_message", (msg) => {
+      setMessages((prevMessages) => [...prevMessages, msg]);
+    });
+
+    // Listen for notifications
+    // socket.on("notification", (notification) => {
+    //   setNotifications((prevNotifications) => [
+    //     ...prevNotifications,
+    //     notification,
+    //   ]);
+    // });
+
+    // Clean up the effect
+    return () => {
+      socket.off("chat_message");
+      socket.off("notification");
+    };
+  }, []);
+  const fileInputRef = useRef(null);
+
+  const handleIconClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log("Selected file:", file.name);
+    }
+  };
   const [selectedChatId, setSelectedChatId] = useState(null);
   const messageInputRef = useRef(null);
 
@@ -87,16 +142,13 @@ const MainChat = () => {
       <div className="chat_inbox">
         <ChatList chats={chats} selectChat={selectChat} />
         <ChatMessages
+          handleIconClick={handleIconClick}
+          handleFileChange={handleFileChange}
+          fileInputRef={fileInputRef}
           messageInputRef={messageInputRef}
           chat={selectedChat}
           handleFormSubmit={handleFormSubmit}
         />
-        {/* <input
-          type="text"
-          id="message-input"
-          placeholder="Enter a message"
-          ref={messageInputRef}
-        /> */}
       </div>
     </div>
   );

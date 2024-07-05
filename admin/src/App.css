@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   font-family: "Montserrat", sans-serif;
 }
 body {
@@ -19,11 +19,9 @@ body {
 }
 .page {
   margin-left: 120px;
-  background: #e5e5e5;
+  background: #eff4ef;
   padding: 40px;
   height: 100vh;
-  border-top-left-radius: 50px;
-  border-bottom-left-radius: 50px;
 }
 @media (max-width: 1208px) {
   .page {
@@ -41,17 +39,17 @@ body {
     width: 100%;
   }
 }
-.form-title{
+.form-title {
   font-size: 1.75rem;
-  color: #111;
+  color: #120388;
   margin-bottom: 30px;
 }
 .form-component {
   padding-top: 40px;
   padding-bottom: 60px;
   min-height: 100vh;
-  background: #e5e5e5;
-
+  background: #ffffff;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -80,12 +78,12 @@ body {
   width: 550px;
 }
 .add-admin-form form {
-  width: 100%;
+  width: 75%;
 }
 .form-component p:first-child {
   font-size: 28px;
   font-weight: 700;
-  color: #370080a3;
+  color: #110080a3;
   margin-top: 30px;
 }
 .form-component form div {
@@ -110,7 +108,8 @@ body {
   border-radius: 8px;
   font-size: 24px;
   margin-bottom: 30px;
-  background: linear-gradient(140deg, #9083d5, #271776ca);
+  /* form buton cloor rrrrrr*/
+  background: linear-gradient(140deg, #2903e7, #fd47caca);
 }
 .form-component .wrapper {
   display: flex;
@@ -201,7 +200,7 @@ body {
   color: #fff;
 }
 .dashboard .banner:first-child .thirdBox {
-  color: #ff008d;
+  color: #ff9d00;
   background: #fff;
 }
 .dashboard .banner:first-child .secondBox,
@@ -239,7 +238,7 @@ body {
 }
 .dashboard .banner table {
   width: 100%;
-  color: #111;
+  color: #0b0b0b;
   font-size: 20px;
 }
 .dashboard .banner table select {
@@ -248,15 +247,15 @@ body {
   width: 100%;
   font-weight: 600;
 }
-.dashboard table td svg{
+.dashboard table td svg {
   display: flex;
   margin: 0 auto;
 }
-.dashboard table td .green{
+.dashboard table td .green {
   font-size: 20px;
   color: #16a34a;
 }
-.dashboard table td .red{
+.dashboard table td .red {
   font-size: 20px;
   color: #dc2626;
 }
@@ -342,15 +341,16 @@ body {
 .SibeBar {
   position: fixed;
   width: 120px;
-  background: transparent;
+  background: #e84a99;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-radius: 9px;
   top: 0;
   left: 0;
   height: 100%;
   align-items: center;
-  color: #fff;
+  color: #0f0e0efa;
   padding: 70px 0;
 }
 .SibeBar svg {
@@ -359,8 +359,8 @@ body {
   font-size: 34px;
 }
 .SibeBar svg:hover {
-  background: #fff;
-  color: #3939d9f2;
+  background: #e3dede;
+  color: #040404f2;
   border-radius: 8px;
   transition: 0.3s;
   cursor: pointer;
@@ -379,7 +379,8 @@ body {
 
 @media (max-width: 1208px) {
   .SibeBar {
-    background: #3939d9f2;
+    background: #dd0d75f2;
+    background-color: #ffffff;
     left: -100%;
     transition: 0.3s;
   }
@@ -393,7 +394,7 @@ body {
     top: 30px;
     left: 40px;
     font-size: 34px;
-    background: #3939d9f2;
+    background: #d94639f2;
     color: #fff;
     height: 40px;
     width: 40px;
@@ -416,7 +417,7 @@ body {
 }
 
 .student h1 {
-  color: #3939d9f2;
+  color: #250fb6f2;
   margin-bottom: 30px;
   font-size: 2.3rem;
 }
@@ -426,7 +427,7 @@ body {
   grid-gap: 20px;
 }
 .student .banner .card {
-  background: #fff;
+  background: #ffffff;
   border-radius: 12px;
   padding: 20px;
   display: flex;
@@ -467,7 +468,7 @@ body {
 }
 
 .messages h1 {
-  color: #3939d9f2;
+  color: #250fb6f2;
   margin-bottom: 30px;
   font-size: 2.3rem;
 }
@@ -494,13 +495,6 @@ body {
 .messages .banner .card div p span {
   font-weight: 500;
 }
-
-
-
-
-
-
-
 
 input[type="date"]:before {
   content: attr(placeholder);

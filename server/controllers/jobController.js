@@ -6,9 +6,9 @@ import asyncHandler from 'express-async-handler';
 
 
 export const createJob = catchAsyncErrors(async (req, res, next) => {
-    const { title, description, salary, location, jobType } = req.body;
+    const { title, description, salary, location, email, jobType } = req.body;
 
-    if (!title || !description || !salary || !location || !jobType) {
+    if (!title || !description || !salary || !location || !email || !jobType) {
         return next(new ErrorHandler("Remplir tous les champs SVP", 400));
     }
     if (!req.user || !req.user.id) {
@@ -27,6 +27,7 @@ export const createJob = catchAsyncErrors(async (req, res, next) => {
             description,
             salary,
             location,
+            email,
             jobType: existingJobType._id, 
             user: req.user.id  
         });
@@ -113,10 +114,10 @@ export const getJobById = catchAsyncErrors(async (req, res, next) => {
 
 /**  UPDATE  */
 export const updateJob = catchAsyncErrors(async (req, res, next) => {
-    const { title, description, salary, location, jobType } = req.body;
+    const { title, description, salary, location, email,jobType } = req.body;
     const jobId = req.params.id;
 
-    if (!title || !description || !salary || !location || !jobType) {
+    if (!title || !description || !salary || !location || !email || !jobType) {
         return next(new ErrorHandler("Remplir tous les champs SVP", 400));
     }
 
@@ -137,6 +138,7 @@ export const updateJob = catchAsyncErrors(async (req, res, next) => {
         jobToUpdate.description = description;
         jobToUpdate.salary = salary;
         jobToUpdate.location = location;
+        jobToUpdate.email = location;
         jobToUpdate.jobType = existingJobType._id;
         const updatedJob = await jobToUpdate.save();
 
@@ -203,5 +205,32 @@ let locationFilter = location !== "" ? location :setUniqueLocation
         });
     } catch (error) {
         next(error);
+    }
+});
+
+
+
+
+
+export const deleteJob = catchAsyncErrors(async (req, res, next) => {
+    try {
+        const job = await Job.findByIdAndDelete(req.params.id);
+
+        if (!job) {
+            return next(new ErrorHandler("Aucun emploi trouvé avec cet ID", 404));
+        }
+
+       
+        if (req.user.role !== 'Admin') {
+            return next(new ErrorHandler("Accès refusé. Vous devez être un administrateur pour supprimer cet emploi.", 403));
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Offre d'emploi supprimée avec succès"
+        });
+    } catch (error) {
+      
+        next(new ErrorHandler("Une erreur s'est produite lors de la suppression de l'emploi", 500));
     }
 });

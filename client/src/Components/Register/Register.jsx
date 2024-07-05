@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Context } from "../../main";
+import "./Register.css";
 
 const Register = () => {
   const { token, setToken } = useContext(Context);
@@ -13,51 +14,73 @@ const Register = () => {
   const [genre, setGenre] = useState("");
   const [password, setPassword] = useState("");
   const [levelEnglish, setLevelEnglish] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+  const [studentAvatar, setStudentAvatar] = useState(null);
   const navigateTo = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("firstName", firstName);
+    formData.append("lastName", lastName);
+    formData.append("email", email);
+    formData.append("phone", phone);
+    formData.append("genre", genre);
+    formData.append("password", password);
+    formData.append("levelEnglish", levelEnglish);
+    formData.append("birthdate", birthdate);
+    formData.append("studentAvatar", studentAvatar);
+    formData.append("role", "Student");
+
     try {
-      await axios
-        .post(
-          "http://localhost:4000/api/v1/user/student/register",
-          {
-            firstName,
-            lastName,
-            email,
-            phone,
-            genre,
-            password,
-            levelEnglish,
-            role: "Student",
-          },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          toast.success(res.data.message);
-          setIsAuthenticated(true);
-          navigateTo("/login");
-          setFirstName("");
-          setLastName("");
-          setEmail("");
-          setPhone("");
-          setGenre("");
-          setPassword("");
-        });
+      const response = await axios.post(
+        "http://127.0.0.1:4000/api/v1/user/student/register",
+        formData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      toast.success(response.data.message);
+
+      // Réinitialiser l'état de l'authentification
+      setIsAuthenticated(false);
+
+      // Redirection vers la page de login après un enregistrement réussi
+      navigateTo("/login");
+
+      // Réinitialisation des champs du formulaire
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPhone("");
+      setGenre("");
+      setPassword("");
+      setLevelEnglish("");
+      setBirthdate("");
+      setStudentAvatar(null);
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An error occurred. Please try again.");
+      }
     }
   };
 
-  if (isAuthenticated) {
-    return <Navigate to={"/"} />;
-  }
+  const handlePhotoChange = (e) => {
+    setStudentAvatar(e.target.files[0]);
+  };
 
   return (
     <div className="centered-component">
-      <div className="form-component ">
+      <div className="form-componentt">
         <h2>S'inscrire</h2>
         <form onSubmit={handleRegister}>
           <div>
@@ -75,7 +98,7 @@ const Register = () => {
             />
             <input
               type="email"
-              placeholder="email"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -84,6 +107,12 @@ const Register = () => {
               placeholder="Num de Téléphone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+            />
+            <input
+              type="date"
+              placeholder="Date de Naissance"
+              value={birthdate}
+              onChange={(e) => setBirthdate(e.target.value)}
             />
             <div>
               <div
@@ -139,6 +168,7 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <input type="file" onChange={handlePhotoChange} />
           </div>
           <div
             style={{
@@ -150,7 +180,7 @@ const Register = () => {
             <p style={{ marginBottom: 0 }}>
               Déjà inscrit?{" "}
               <Link
-                to={"/login"}
+                to="/login"
                 style={{ textDecoration: "none", color: "#271776ca" }}
               >
                 Connecter
@@ -166,7 +196,9 @@ const Register = () => {
               marginTop: "30px",
             }}
           >
-            <button type="submit">Enregistrer</button>
+            <button type="submit" className="pink-button">
+              Enregistrer
+            </button>
           </div>
         </form>
       </div>

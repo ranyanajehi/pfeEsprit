@@ -11,7 +11,6 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigateTo = useNavigate();
   // useBeforeUnload(
@@ -26,7 +25,7 @@ const Login = () => {
       await axios
         .post(
           "http://127.0.0.1:4000/api/v1/user/login",
-          { email, password, confirmPassword, role: "Student" },
+          { email, password, role: "Student" },
           {
             withCredentials: true,
             headers: { "Content-Type": "application/json" },
@@ -47,9 +46,7 @@ const Login = () => {
       toast.error(error.response.data.message);
     }
   };
-  // if (isAuthenticated) {
-  //   return <Navigate to={"/"} />;
-  // }
+
   return (
     <div>
       <div className="centered-component">
@@ -63,17 +60,12 @@ const Login = () => {
               placeholder="Email"
             />
             <input
-              type="text"
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Votre Mot De Passse SVP"
             ></input>
-            <input
-              type="text"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirmez Votre Mot De Passse"
-            ></input>
+
             <div
               style={{
                 gap: "10px",

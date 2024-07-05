@@ -109,23 +109,22 @@ Image:"/assets/Capture16.PNG"
         },
       };
   return (
-    <div style={{marginTop:"30px"}}>
-     <div style={{width:"80%",marginLeft:"auto",marginRight:"auto",textAlign:"center"}}>
-        <h2 style={{marginBottom:"30px"}}>Nos Etudiant</h2>
+    <div  className='list-student ' style={{background:"#ffffff"}}>
+     <div style={{width:"100%",marginLeft:"auto",marginRight:"auto",textAlign:"center"}}>
+        <h2 className='color-eleve' style={{marginBottom:"30px"}}>Nos Etudiant</h2>
         <Carousel
           responsive={responsive}
           removeArrowOnDeviceType={[
-            // "superLargeDesktop",
-            // "desktop",
+       
             "tablet",
             "mobile",
           ]}
         >
           {AncienStudent.map((student, index) => {
             return (
-                <div key={index} className="card">
+                <div key={index} >
                 <img src={student.Image} alt="Student" />
-                <div className="card-content">
+                <div >
                 <span>{student.Name}</span>
                   <p>{student.Job}</p>
                   

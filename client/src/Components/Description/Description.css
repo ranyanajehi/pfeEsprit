@@ -1,52 +1,40 @@
-.container {
+.descrption {
+  background-color: white;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin: 20px;
+  justify-content: space-between;
+  min-height: 100vh;
+  flex-wrap: wrap;
+  padding: 20px; /* Ajout de padding pour l'espacement */
 }
 
-.presentation {
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.banner {
-  flex: 1;
-}
-
-.banner h1 {
-  font-size: 24px;
-  color: #333;
-}
-
-.banner p {
-  font-size: 16px;
-  color: #666;
-}
-
-.button-container {
-  margin-top: 20px;
-}
-
-.button-container button {
-  padding: 10px 20px;
-  font-weight: 500;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  color: white;
-  background-color: #007BFF;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-
-
-.image-home{
+.image-home {
   width: 50%;
-  height: 100vh;
+  height: auto; /* Ajustement de la hauteur automatique pour maintenir les proportions */
+  max-width: 100%; /* Garantit que l'image ne dépasse pas la largeur de son conteneur */
+}
+
+.pink-text {
+  color: rgb(255, 0, 123);
+}
+
+/* Media queries pour le responsive design */
+@media (max-width: 768px) {
+  .descrption {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px; /* Ajustement du padding pour les écrans plus petits */
+  }
+
+  .image-home {
+    width: 80%; /* Ajustement de la largeur de l'image pour les écrans plus petits */
+    max-width: 100%;
+    height: auto;
+    margin-top: 20px; /* Espacement supplémentaire entre l'image et le texte */
+  }
+
+  .pink-text {
+    font-size: 1.5rem; /* Ajustement de la taille du texte rose pour les écrans plus petits */
+  }
 }

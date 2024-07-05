@@ -1,0 +1,72 @@
+.job-offer-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #2261df;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.job-offer-container form {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.job-offer-container form input,
+.job-offer-container form textarea,
+.job-offer-container form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #1428be;
+    border-radius: 5px;
+}
+
+.job-offer-container form button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: rgb(35, 21, 157);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.job-offer-container form button:hover {
+    background-color: #0056b3;
+}
+
+.job-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.job-card {
+    padding: 15px;
+    background-color: rgb(34, 28, 214);
+    border: 1px solid #db0707;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.job-card h3 {
+    margin: 0 0 10px;
+}
+
+.job-card p {
+    margin: 5px 0;
+}
+
+.job-card button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #dc3545;
+    color: rgb(201, 39, 39);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.job-card button:hover {
+    background-color: #c82333;
+}

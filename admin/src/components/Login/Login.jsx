@@ -1,13 +1,13 @@
-import React from 'react'
-import { useState } from 'react';
-import { useContext } from 'react';
-import { Context } from '../../main';
-import {  Navigate, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import React from "react";
+import { useState } from "react";
+import { useContext } from "react";
+import { Context } from "../../main";
+import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 const Login = () => {
-    const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+  const { isAuthenticated, setIsAuthenticated } = useContext(Context);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,42 +37,39 @@ const Login = () => {
         });
     } catch (error) {
       toast.error(error.response.data.message);
-     
     }
   };
-  if (isAuthenticated) {
-    return <Navigate to={"/"} />;
-  }
+
   return (
     <section className="container form-component">
-    <img src="/logo.png" alt="logo" className="logo" />
-    <h1 className="form-title">Bienvenue à RBK </h1>
-    <p>ESPACE ADMIN!</p>
-    <form onSubmit={handleLogin}>
-      <input
-        type="text"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
-      <div style={{ justifyContent: "center", alignItems: "center" }}>
-        <button type="submit">Connecter</button>
-      </div>
-    </form>
-  </section>
-  )
-}
+      <img src="/logo.png" alt="logo" className="logo" />
+      <h1 className="form-title">Bienvenue à RBK </h1>
+      <p>ESPACE ADMIN!</p>
+      <form onSubmit={handleLogin}>
+        <input
+          type="text"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <div style={{ justifyContent: "center", alignItems: "center" }}>
+          <button type="submit">Connecter</button>
+        </div>
+      </form>
+    </section>
+  );
+};
 
-export default Login
+export default Login;
