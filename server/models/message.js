@@ -7,7 +7,7 @@ const MessageShcema = new mongoose.Schema({
   room: { type: ObjectId, ref: "Room", required: true },
   media: {
     type: String,
-    enum: ["image", "video", "text", "pdf"],
+    enum: ["image", "video", "text", "pdf", "audio"],
     default: "text",
   },
 });

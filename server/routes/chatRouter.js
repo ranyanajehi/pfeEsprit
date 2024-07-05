@@ -7,8 +7,8 @@ import {
   getAllRoomByUserId,
   createRoom,
 } from "../controllers/chat.js";
-import uploadFiles from "../middlewares/uploadFiles.js";
-router.post("/", uploadFiles, addMessage);
+import { upload } from "../middlewares/multer.js";
+router.post("/", upload.single("file"), addMessage);
 router.get("/:roomId", getAllMessages);
 router.post("/:user1/:user2", createRoom);
 router.get("/room/:userId", getAllRoomByUserId);
