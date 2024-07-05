@@ -1,7 +1,13 @@
 import React, { useContext, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Home from "./Pages/Home.jsx";
 import OurProgram from "./Pages/OurProgram.jsx";
 import Appointment from "./Pages/Appointment.jsx";
@@ -17,58 +23,36 @@ import CVStudent from "./Components/CVStudent/GneneateCV.jsx";
 import "./App.css";
 import JobOffer from "./Pages/JobOffer.jsx";
 import Footer from "./Components/Footer/Footer.jsx";
-
+import Scroller from "./Pages/Scoller.jsx";
+import Dashbord from "./Pages/Dashbord.jsx";
+import Chat from "./Pages/chat.jsx";
+import "./App.css";
 
 const App = () => {
-  const { isAuthenticated, setIsAuthenticated, setUser } = useContext(Context);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get("http://127.0.0.1:4000/api/v1/user/student/me", {
-          withCredentials: true,
-        });
-        setIsAuthenticated(true);
-        setUser(response.data.user);
-      } catch (error) {
-        setIsAuthenticated(false);
-        setUser({});
-      }
-    };
-    fetchUser();
-  }, [isAuthenticated, setIsAuthenticated, setUser]);
-
-  return (
-    <Router>
-      <Scoller />
-      <AppContent isAuthenticated={isAuthenticated} />
-      <ToastContainer position="top-center" />
-    </Router>
-  );
-};
-
-const AppContent = ({ isAuthenticated }) => {
-  const location = useLocation(); // Utilisez useLocation pour obtenir l'URL actuelle
-  const isDashboard =  ["/messageStudent","/dashboard","/giftCourses","/CV", "/register","/giftCourses","/jobOffer"].includes(location.pathname); // Utilisez location.pathname
- 
+  const { token, setToken } = useContext(Context);
 
   return (
     <>
-      {!isDashboard && <Navbar />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<OurProgram />} />
-        <Route path="/appointment" element={<Appointment />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={isAuthenticated ? <DashboardStudent /> : <Navigate to="/login" />} />
+      <Router>
+        <Scroller />
+        <Navbar />
+        <Routes>
+          <Route path="/dashboard" element={<DashboardStudent />}>
+            <Route index element={<MessageStudentPage />} />
+            <Route path="/dashboard/chat" element={<Chat />} />
+            <Route path="/dashboard/jobOffer" element={<JobOffer />} />
+          </Route>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<OurProgram />} />
+          <Route path="/appointment" element={<Appointment />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
 
-        <Route path="/messageStudent" element={isAuthenticated ? <MessageStudentPage /> : <Navigate to="/login" />} />
-        <Route path="/CV" element={isAuthenticated ? <CVStudent /> : <Navigate to="/login" />} />
-        
-        <Route path="/jobOffer" element={isAuthenticated ? <JobOffer /> : <Navigate to="/login" />} />
-      </Routes>
-      <Footer />
+          <Route path="/CV" element={<CVStudent />} />
+        </Routes>
+        <Footer />
+        <ToastContainer position="top-center" />
+      </Router>
     </>
   );
 };

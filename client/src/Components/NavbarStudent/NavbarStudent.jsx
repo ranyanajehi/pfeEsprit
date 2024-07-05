@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Context } from '../../main';
+import React, { useContext, useState, useEffect } from "react";
+import { Context } from "../../main";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -11,13 +11,15 @@ const NavbarStudent = () => {
   const [appointments, setAppointments] = useState([]);
   const [studentCount, setStudentCount] = useState(0);
 
-
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const { data } = await axios.get("http://127.0.0.1:4000/api/v1/appointment/getAllAppointment", {
-          withCredentials: true
-        });
+        const { data } = await axios.get(
+          "http://127.0.0.1:4000/api/v1/appointment/getAllAppointment",
+          {
+            withCredentials: true,
+          }
+        );
         setAppointments(data.allAppointment);
       } catch (error) {
         setAppointments([]);
@@ -25,9 +27,12 @@ const NavbarStudent = () => {
     };
     const fetchStudentCount = async () => {
       try {
-        const { data } = await axios.get("http://127.0.0.1:4000/api/v1/user/count", {
-          withCredentials: true
-        });
+        const { data } = await axios.get(
+          "http://127.0.0.1:4000/api/v1/user/count",
+          {
+            withCredentials: true,
+          }
+        );
         setStudentCount(data.studentCount);
       } catch (error) {
         toast.error(error.response.data.message);
@@ -56,10 +61,6 @@ const NavbarStudent = () => {
       toast.error(error.response.data.message);
     }
   };
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
 
   return (
     <section className="dashboard page">
@@ -98,29 +99,47 @@ const NavbarStudent = () => {
           </thead>
           <tbody>
             {appointments && appointments.length > 0 ? (
-              appointments.map(appointment => (
+              appointments.map((appointment) => (
                 <tr key={appointment._id}>
                   <td>{`${appointment.firstName} ${appointment.lastName}`}</td>
                   <td>{appointment.email}</td>
                   <td>{appointment.phone}</td>
-                  <td>{new Date(appointment.appointment_date).toLocaleDateString()}</td>
-                  <td>{appointment.levelEnglish}</td>
-                  <td>{appointment.hasVisited === true ? <GoCheckCircleFill  className="green"/> : <AiFillCloseCircle  className="red"/>}</td>
                   <td>
-                    <select   className={
-                            appointment.status === "Pending"
-                              ? "value-pending"
-                              : appointment.status === "Accepted"
-                              ? "value-accepted"
-                              : "value-rejected"
-                          }
-                          value={appointment.status}
-                          onChange={(e) =>
-                            handleUpdateStatus(appointment._id, e.target.value)
-                          }  >
-                      <option value="Pending"  className="value-pending">En attente</option>
-                      <option value="Accepted"  className="value-accepted">Confirmer</option>
-                      <option value="Rejected" className="value-rejected">Réfuser</option>
+                    {new Date(
+                      appointment.appointment_date
+                    ).toLocaleDateString()}
+                  </td>
+                  <td>{appointment.levelEnglish}</td>
+                  <td>
+                    {appointment.hasVisited === true ? (
+                      <GoCheckCircleFill className="green" />
+                    ) : (
+                      <AiFillCloseCircle className="red" />
+                    )}
+                  </td>
+                  <td>
+                    <select
+                      className={
+                        appointment.status === "Pending"
+                          ? "value-pending"
+                          : appointment.status === "Accepted"
+                          ? "value-accepted"
+                          : "value-rejected"
+                      }
+                      value={appointment.status}
+                      onChange={(e) =>
+                        handleUpdateStatus(appointment._id, e.target.value)
+                      }
+                    >
+                      <option value="Pending" className="value-pending">
+                        En attente
+                      </option>
+                      <option value="Accepted" className="value-accepted">
+                        Confirmer
+                      </option>
+                      <option value="Rejected" className="value-rejected">
+                        Réfuser
+                      </option>
                     </select>
                   </td>
                 </tr>

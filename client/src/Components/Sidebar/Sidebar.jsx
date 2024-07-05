@@ -42,19 +42,19 @@ const Sidebar = () => {
   };
 
   const gotoMessagesPage = () => {
-    navigate("/messageStudent");
+    navigate("/dashboard/chat");
     setShow(false);
   };
 
   const gotTojobOffer = () => {
-    navigate("/jobOffer");
+    navigate("/dashboard/jobOffer");
     setShow(false);
   };
 
   return (
     <>
       <nav
-        style={!isAuthenticated ? { display: "none" } : { display: "flex" }}
+        // style={ ? { display: "none" } : { display: "flex" }}
         className={show ? "show SibeBar" : "SibeBar"}
       >
         <div className="profile">

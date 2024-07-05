@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   font-family: "Montserrat", sans-serif;
 }
 body {
@@ -39,7 +39,7 @@ body {
     width: 100%;
   }
 }
-.form-title{
+.form-title {
   font-size: 1.75rem;
   color: #120388;
   margin-bottom: 30px;
@@ -243,19 +243,19 @@ body {
 }
 .dashboard .banner table select {
   font-size: 20px;
-  border:none;
+  border: none;
   width: 100%;
   font-weight: 600;
 }
-.dashboard table td svg{
+.dashboard table td svg {
   display: flex;
   margin: 0 auto;
 }
-.dashboard table td .green{
+.dashboard table td .green {
   font-size: 20px;
   color: #16a34a;
 }
-.dashboard table td .red{
+.dashboard table td .red {
   font-size: 20px;
   color: #dc2626;
 }
@@ -341,7 +341,7 @@ body {
 .SibeBar {
   position: fixed;
   width: 120px;
-  background: #e84a99;;
+  background: #e84a99;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -495,13 +495,6 @@ body {
 .messages .banner .card div p span {
   font-weight: 500;
 }
-
-
-
-
-
-
-
 
 input[type="date"]:before {
   content: attr(placeholder);

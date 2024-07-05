@@ -12,6 +12,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/icons-material": "^5.15.21",
     "@mui/material": "^5.15.21",
     "axios": "^1.7.2",
@@ -31,6 +34,7 @@
     "react-router-dom": "^6.24.0",
     "react-toastify": "^10.0.5",
     "redux": "^5.0.1",
+    "socket.io-client": "^4.7.5",
     "style-loader": "^4.0.0",
     "styled-components": "^6.1.11"
   },
