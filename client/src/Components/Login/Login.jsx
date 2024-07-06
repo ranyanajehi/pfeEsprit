@@ -1,13 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import "./Login.css";
 
-import {  Link, useNavigate } from "react-router-dom";
+import { useBeforeUnload, Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Context } from "../../main";
 
 const Login = () => {
-  const {  setToken } = useContext(Context);
+  const { token, setToken } = useContext(Context);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,10 +24,11 @@ const Login = () => {
     try {
       await axios
         .post(
-          "http://localhost:4000/api/v1/user/login",
+          "http://127.0.0.1:4000/api/v1/user/login",
           { email, password, role: "Student" },
           {
-        
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" },
           }
         )
         .then((res) => {
@@ -39,6 +40,7 @@ const Login = () => {
           navigateTo("/");
           setEmail("");
           setPassword("");
+          setConfirmPassword("");
         });
     } catch (error) {
       toast.error(error.response.data.message);
