@@ -48,8 +48,6 @@ const Register = () => {
           // headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
-      
       toast.success(response.data.message);
 
       // Redirection vers la page de login après un enregistrement réussi

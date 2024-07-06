@@ -38,9 +38,8 @@ export const studentRegister = catchAsyncErrors(async (req, res, next) => {
     studentAvatar: image,
     status: "Pending", // Définit le statut par défaut à "Pending"
   });
-  
-  //generateToken(user, 'Client enregistré', 200, res);
- return  res.status(201).json({
+
+  res.status(201).json({
     success: true,
     message: "Client enregistré",
     user,
