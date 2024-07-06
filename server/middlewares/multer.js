@@ -1,26 +1,27 @@
-// middlewares/multer.js
-import multer from "multer";
 import path from "path";
-
+import multer from "multer";
+import fs from "fs";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadDir = path.join(__dirname, "uploads");
+import { fileURLToPath } from "url";
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Dossier où les fichiers seront sauvegardés
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
   },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
 });
 
-const upload = multer({
+export const upload = multer({
   storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only images are allowed!'));
-    }
-  }
+  limits: { fileSize: 1000000 }, // Example limit of 1MB
+  fileFilter: function (req, file, cb) {
+    cb(null, true);
+  },
 });
-
-export default upload;
+// .single("file");

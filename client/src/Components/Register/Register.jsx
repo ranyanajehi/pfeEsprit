@@ -31,23 +31,26 @@ const Register = () => {
     formData.append("password", password);
     formData.append("levelEnglish", levelEnglish);
     formData.append("birthdate", birthdate);
-    formData.append("studentAvatar", studentAvatar);
+    formData.append("file", studentAvatar);
     formData.append("role", "Student");
+    console.log("FormData fields:");
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
+    // console.log("formdata", formData.values());
 
     try {
       const response = await axios.post(
         "http://127.0.0.1:4000/api/v1/user/student/register",
         formData,
         {
-      
-          headers: { "Content-Type": "multipart/form-data" },
+          // withCredentials: true,
+          // headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
       
       toast.success(response.data.message);
-
-      // Réinitialiser l'état de l'authentification
 
       // Redirection vers la page de login après un enregistrement réussi
       navigateTo("/login");

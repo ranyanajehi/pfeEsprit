@@ -4,8 +4,11 @@ import { Room } from "../models/room.js";
 
 export const addMessage = async function (req, res) {
   const { userId, content, roomId, media } = req.body;
+  let file;
   try {
-    console.log("rooooomidd", roomId);
+    if (["image", "video", "pdf", "audio"].includes(media)) {
+      file = req.file.filename;
+    }
     const room = await Room.findById(roomId);
 
     if (!room) {
@@ -17,20 +20,13 @@ export const addMessage = async function (req, res) {
       return res.status(400).json({ error: "User is not exist in room" });
     }
     console.log("fileeeeeeeeeeeeeeee", req.file);
-    const messages =
-      media === "text"
-        ? await Message.create({
-            media: media,
-            sender: userId,
-            message: content,
-            room: roomId,
-          })
-        : await Message.create({
-            media: media,
-            sender: userId,
-            message: req.file,
-            room: roomId,
-          });
+    const messages = await Message.create({
+      media: media,
+      sender: userId,
+      message: file ? file : content,
+      room: roomId,
+    });
+
     const updatedRoom = await Room.findByIdAndUpdate(roomId, {
       $push: { messages: messages._id },
     });
