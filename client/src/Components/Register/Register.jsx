@@ -39,14 +39,15 @@ const Register = () => {
         "http://127.0.0.1:4000/api/v1/user/student/register",
         formData,
         {
-          withCredentials: true,
+      
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
+
+      
       toast.success(response.data.message);
 
       // Réinitialiser l'état de l'authentification
-      setIsAuthenticated(false);
 
       // Redirection vers la page de login après un enregistrement réussi
       navigateTo("/login");
