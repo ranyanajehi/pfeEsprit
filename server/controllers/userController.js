@@ -6,16 +6,16 @@ import {User } from "../models/userSchema.js";
 
 
 
-export const studentRegister = catchAsyncErrors(async (req, res, next) => {
-  const { firstName, lastName, email, phone, password, genre, confirmPassword,levelEnglish } = req.body;
+export const studentRegister = async (req, res) => {
+  const { firstName, lastName, email, phone, password, genre,levelEnglish } = req.body;
   const image= req.file.filename;
-
-  if (!firstName || !lastName || !email || !phone || !password || !genre ||!confirmPassword ||!levelEnglish ) {
-    return next(new ErrorHandler('Remplir tous les champs SVP', 400));
+console.log(req.body)
+  if (!firstName || !lastName || !email || !phone || !password || !genre  ||!levelEnglish ) {
+   
+    //return('Remplir tous les champs SVP', 400));
   }
-  if (password !== confirmPassword) {
-    return next(new ErrorHandler('Les mots de passe ne correspondent pas', 400));
-}
+try {
+  
   const user = await User.create({
     firstName,
     lastName,
@@ -28,15 +28,18 @@ export const studentRegister = catchAsyncErrors(async (req, res, next) => {
     studentAvatar: image,
     status: 'Pending' // Définit le statut par défaut à "Pending"
   });
-
-  res.status(201).json({
+  
+  //generateToken(user, 'Client enregistré', 200, res);
+ return  res.status(201).json({
     success: true,
     message: 'Client enregistré',
     user
   });
-  generateToken(user, 'Client enregistré', 200, res);
+} catch (error) {
+  throw error
+}
 
-});
+}
 
 
 

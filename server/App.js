@@ -19,11 +19,14 @@ const app = express();
 
 config({ path: "./config/config.env" });
 console.log("config", process.env.FRONTEND_URL);
+app.use(cookieParser());
+app.use(urlencoded({ extended: true }));
+app.use(express.json());
 app.use(
   cors({
     origin: [process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
     method: ["GET", "POST", "DELETE", "PUT"],
-    credentials: true,
+  
   })
 );
 // app.use(cors());
@@ -40,15 +43,8 @@ app.use(
     ].join(" ");
   })
 );
-app.use(cookieParser());
-app.use(urlencoded({ extended: true }));
-app.use(express.json());
-app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: "/tmp/",
-  })
-);
+
+
 app.get("/hello", function (req, res) {
   res.send("hello");
 });
@@ -57,7 +53,6 @@ app.use("/api/v1/user", studentRouter);
 app.use("/api/v1/appointment", appointmentRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/chat", chatRouter);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 dbConnection();
-app.use(errorMiddleware);
+//app.use(errorMiddleware);
 export default app;

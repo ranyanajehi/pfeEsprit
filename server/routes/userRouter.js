@@ -32,14 +32,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
+
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    console.log("filesddsssssssssssssssss",file)
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
+    console.log("filesddsssssssssssssssss",file)
     const uniqueSuffix = Date.now();
     cb(null, uniqueSuffix + file.originalname);
   },
