@@ -60,7 +60,6 @@ app.use("/api/v1/appointment", appointmentRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/chat", chatRouter);
 
-console.log(path.join(__dirname, "/middlewares/uploads"));
 dbConnection();
 app.use(errorMiddleware);
 

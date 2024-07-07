@@ -1,13 +1,19 @@
 import React from "react";
 
-const ChatList = ({ rooms, selectChat, user }) => {
+const ChatList = ({ rooms, selectChat, user, selectedChatId }) => {
   return (
     <aside className="aside_chat">
       {console.log("rooomqqqqq", rooms)}
       <ul id="chat-list">
         {rooms.map((chat) => {
           return (
-            <li key={chat._id} onClick={() => selectChat(chat._id, chat.user)}>
+            <li
+              className={`chat-item ${
+                selectedChatId === chat._id ? "selected" : ""
+              }`}
+              key={chat._id}
+              onClick={() => selectChat(chat._id, chat.user)}
+            >
               <img
                 className="avatar"
                 src={chat.user.studentAvatar}
