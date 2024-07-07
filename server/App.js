@@ -9,6 +9,8 @@ import studentRouter from "./routes/userRouter.js";
 import appointmentRouter from "./routes/appointmentRouter.js";
 import jobRouter from "./routes/jobRouter.js";
 import chatRouter from "./routes/chatRouter.js";
+import eventRouter from "./routes/eventRouter.js"
+import graduationRouter from "./routes/graduationRouter.js"
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -56,6 +58,8 @@ app.use("/api/v1/user", studentRouter);
 app.use("/api/v1/appointment", appointmentRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/chat", chatRouter);
+app.use("/api/v1/event",eventRouter);
+app.use("/api/v1/graduation", graduationRouter);
 // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 dbConnection();
 app.use(errorMiddleware);
