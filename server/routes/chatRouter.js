@@ -12,6 +12,7 @@ router.post("/", upload.single("file"), addMessage);
 router.get("/:roomId", getAllMessages);
 router.post("/:user1/:user2", createRoom);
 router.get("/room/:userId", getAllRoomByUserId);
+
 router.delete("/:id", removeMessage);
 
 export default router;

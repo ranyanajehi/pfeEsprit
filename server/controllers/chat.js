@@ -3,6 +3,7 @@ import { Message } from "../models/message.js";
 import { Room } from "../models/room.js";
 
 export const addMessage = async function (req, res) {
+  console.log("req.body", req.body);
   const { userId, content, roomId, media } = req.body;
   let file;
   try {
@@ -46,8 +47,11 @@ export const removeMessage = async function (req, res) {
 };
 export const getAllMessages = async function (req, res) {
   try {
-    const messages = await Message.findMany({
+    const messages = await Message.find({
       room: req.params.roomId,
+    }).populate({
+      path: "sender",
+      model: "User",
     });
     res.status(200).send(messages);
   } catch (error) {
@@ -101,5 +105,5 @@ export const createRoom = async function (req, res) {
     throw error;
   }
 };
-
+export const getAllMessagesByRoomId = async () => {};
 // export default s;
