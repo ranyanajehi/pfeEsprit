@@ -3,7 +3,6 @@ import { Context } from "../../main";
 import { TiHome } from "react-icons/ti";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { AiFillMessage } from "react-icons/ai";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { MdAddModerator } from "react-icons/md";
 import { FaBriefcase, FaUserGraduate } from "react-icons/fa"; // FaUserGraduate is used instead of PiStudentBold
 import axios from "axios";
@@ -95,18 +94,6 @@ const SideBar = () => {
           </div>
         </div>
       </nav>
-      <div className={`wrapper ${collapsed ? "collapsed" : ""}`}>
-        <GiHamburgerMenu
-          className="hamburger"
-          onClick={() => setCollapsed(!collapsed)}
-        />
-        <div
-          className="collapse-icon"
-          onClick={() => setCollapsed(!collapsed)}
-        >
-          {collapsed ? <>&#x25B6;</> : <>&#x25C0;</>} {/* Unicode symbols for right and left arrows */}
-        </div>
-      </div>
     </>
   );
 };
