@@ -15,7 +15,9 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
-
+app.use(express.json());
+app.use(cookieParser());
+app.use(urlencoded({ extended: true }));
 config({ path: "./config/config.env" });
 console.log("config", process.env.FRONTEND_URL);
 app.use(
@@ -23,8 +25,10 @@ app.use(
     origin: [process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
     method: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
+    preflightContinue: true,
   })
 );
+
 // app.use(cors());
 app.use(
   morgan(function (tokens, req, res) {
@@ -39,15 +43,14 @@ app.use(
     ].join(" ");
   })
 );
-app.use(urlencoded({ extended: true }));
-app.use(express.json());
-app.use(cookieParser());
+
 // app.use(
 //   fileUpload({
 //     useTempFiles: true,
 //     tempFileDir: "/tmp/",
 //   })
 // );
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.get("/hello", function (req, res) {
   res.send("hello");
 });
@@ -56,7 +59,9 @@ app.use("/api/v1/user", studentRouter);
 app.use("/api/v1/appointment", appointmentRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/chat", chatRouter);
-// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+console.log(path.join(__dirname, "/middlewares/uploads"));
 dbConnection();
 app.use(errorMiddleware);
+
 export default app;

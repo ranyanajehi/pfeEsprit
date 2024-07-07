@@ -71,7 +71,7 @@ const Sidebar = () => {
           <PiStudentBold onClick={gitfCourses} />
           <AiFillMessage onClick={gotoMessagesPage} />
           <FaFilePdf onClick={gotTojobOffer} />
-          <RiLogoutBoxFill onClick={handleLogout} />
+          {/* <RiLogoutBoxFill onClick={handleLogout} /> */}
         </div>
       </nav>
       <div
