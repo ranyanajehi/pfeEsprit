@@ -17,10 +17,13 @@ import {
   isStudentAuthenticated,
   isAdminAuthenticated,
 } from "./middlewares/auth.js";
-import { upload } from "./middlewares/multer.js";
+
+import eventRouter from "./routes/eventRouter.js";
+import graduationRouter from "./routes/graduationRouter.js";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
+import { upload } from "./middlewares/multer.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -53,12 +56,9 @@ app.use(
   })
 );
 
-// app.use(
-//   fileUpload({
-//     useTempFiles: true,
-//     tempFileDir: "/tmp/",
-//   })
-// );
+app.use(urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.get("/hello", function (req, res) {
   res.send("hello");
@@ -70,6 +70,9 @@ app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/chat", chatRouter);
 app.post("/updateSections", isStudentAuthenticated, updateSectionRecords);
 app.get("/getSections", isStudentAuthenticated, getAllUserSections);
+
+app.use("/api/v1/event", eventRouter);
+app.use("/api/v1/graduation", graduationRouter);
 
 dbConnection();
 app.use(errorMiddleware);

@@ -6,8 +6,8 @@ import { Outlet } from "react-router-dom";
 const DashboardStudent = () => {
   return (
     <div>
-      {/* <Sidebar />  */}
-      {/* <NavbarStudent /> */}
+      {/* <Sidebar />
+      <NavbarStudent /> */}
       <Outlet />
     </div>
   );

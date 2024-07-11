@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   TextField,
@@ -8,6 +8,7 @@ import {
   MenuItem,
   IconButton,
 } from "@mui/material";
+import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { useUser } from "../../../context/cvGeneratorContext.jsx";
@@ -16,8 +17,7 @@ const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
 const proficiencyLevels = ["Basic", "Conversational", "Fluent", "Native"];
 
 const Skills = () => {
-  const { user, getCurrentUser, updateUserRecord, getAllUserRecords } =
-    useUser();
+  const { user, getCurrentUser, updateUserRecord } = useUser();
   const [technicalSkills, setTechnicalSkills] = useState([
     { skill: "", level: "" },
   ]);
@@ -99,7 +99,25 @@ const Skills = () => {
       section: "Skill",
     });
   };
-
+  const getAllUserRecords = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/getSections", {
+        withCredentials: true,
+      });
+      console.log("====================================");
+      console.log(response.data);
+      console.log("====================================");
+      setSoftSkills(response.data.skills.softSkills);
+      setTechnicalSkills(response.data.skills.technicalSkills);
+      setLanguages(response.data.skills.languages);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+  useEffect(() => {
+    getAllUserRecords();
+  }, []);
   return (
     <Container sx={{ mt: 3 }}>
       <Typography variant="h5">Skills</Typography>

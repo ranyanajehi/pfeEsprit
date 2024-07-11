@@ -7,6 +7,7 @@ import {
   Typography,
   MenuItem,
   IconButton,
+  Checkbox,
 } from "@mui/material";
 
 import axios from "axios";
@@ -71,6 +72,7 @@ const Education = () => {
     const values = [...educations];
     values.splice(index, 1);
     setEducations(values);
+    updateUserRecord({ records: educations, section: "education" });
   };
 
   const handleUpdate = () => {
@@ -173,11 +175,9 @@ const Education = () => {
             />
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-            <TextField
-              type="checkbox"
+            <Checkbox
+              defaultChecked={education.stillEnrolled}
               name="stillEnrolled"
-              checked={education.stillEnrolled}
-              // value={education.stillEnrolled}
               onChange={(e) => handleChange(index, e)}
             />
             <Typography sx={{ ml: 1 }}>Still Enrolled</Typography>

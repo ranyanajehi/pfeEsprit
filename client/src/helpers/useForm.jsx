@@ -8,8 +8,8 @@ const useForm = (initialState, validate) => {
   const setDataAndErrors = useCallback(
     (data) => {
       setFormData(data);
-      let errors = validate(data);
-      setErrors(errors);
+      const newErrors = validate(data);
+      setErrors(newErrors);
     },
     [validate]
   );
@@ -18,18 +18,19 @@ const useForm = (initialState, validate) => {
   const changeHandler = useCallback(
     (e, positionId = null, projectId = null) => {
       const { name, value, type, checked, files, tagName } = e.target;
+
       let updatedData;
 
       if (positionId !== null) {
         updatedData = {
           ...formData,
           positions: formData.positions.map((pos) =>
-            pos.id === positionId
+            pos._id === positionId
               ? projectId !== null
                 ? {
                     ...pos,
                     projects: pos.projects.map((proj) =>
-                      proj.id === projectId ? { ...proj, [name]: value } : proj
+                      proj._id === projectId ? { ...proj, [name]: value } : proj
                     ),
                   }
                 : { ...pos, [name]: type === "checkbox" ? checked : value }

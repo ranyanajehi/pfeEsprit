@@ -91,6 +91,7 @@ const Projects = () => {
     const values = [...projects];
     values.splice(index, 1);
     setProjects(values);
+    updateUserRecord({ records: projects, section: "projects" });
   };
 
   const handleUpdate = () => {

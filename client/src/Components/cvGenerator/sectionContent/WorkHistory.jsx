@@ -34,7 +34,6 @@ const WorkHistory = () => {
         endDate: "",
         isCurrent: false,
         employmentType: "Full Time",
-        projects: [{ id: 1, name: "", description: "" }],
       },
     ],
   };
@@ -57,7 +56,6 @@ const WorkHistory = () => {
           endDate: "",
           isCurrent: false,
           employmentType: "Full Time",
-          projects: [{ id: 1, name: "", description: "" }],
         },
       ],
     });
@@ -68,48 +66,32 @@ const WorkHistory = () => {
       ...formData,
       positions: formData.positions.filter((pos) => pos._id !== positionId),
     });
+    updateUserRecord({ records: formData.positions, section: "workHistory" });
   };
+
   const getAllUserRecords = async () => {
     try {
       const response = await axios.get("http://localhost:4000/getSections", {
         withCredentials: true,
       });
-      console.log("====================================");
-      console.log(response.data);
-      console.log("====================================");
       setFormData({ positions: response.data.workHistory });
     } catch (error) {
       console.error(error);
       throw error;
     }
   };
+
   useEffect(() => {
     getAllUserRecords();
   }, []);
-
-  const addProject = (positionId) => {
-    setFormData({
-      ...formData,
-      positions: formData.positions.map((pos) =>
-        pos._id === positionId
-          ? {
-              ...pos,
-              projects: [
-                ...pos.projects,
-                { _id: pos.projects.length + 1, name: "", description: "" },
-              ],
-            }
-          : pos
-      ),
-    });
-  };
 
   const handleSubmit = () => {
     const errors = validate(formData, true);
     setErrors(errors);
     if (Object.keys(errors).length === 0) {
-      // Handle successful validation logic
-      console.log("Form Data:", formData);
+      formData.positions.map((pos) => {
+        delete pos._id;
+      });
       updateUserRecord({ records: formData.positions, section: "workHistory" });
     }
   };
@@ -139,7 +121,7 @@ const WorkHistory = () => {
               </Box>
               <IconButton
                 aria-label="delete"
-                onClick={() => removePosition(position.id)}
+                onClick={() => removePosition(position._id)}
                 sx={{ ml: 2 }}
               >
                 <DeleteIcon />
@@ -198,10 +180,8 @@ const WorkHistory = () => {
                     name="endDate"
                     value={position.endDate}
                     onChange={(e) => changeHandler(e, position._id)}
-                    sx={{
-                      "& .MuiInputLabel-root": { color: "gray" },
-                      "& .MuiInputLabel-root.Mui-focused": { color: "#ff007b" },
-                    }}
+                    error={!!errors[`positions.${posIndex}.endDate`]}
+                    helperText={errors[`positions.${posIndex}.endDate`]}
                   />
                 </Box>
                 <FormControlLabel
@@ -273,18 +253,19 @@ const WorkHistory = () => {
       ))}
       <Button
         variant="contained"
+        color="primary"
         startIcon={<AddIcon />}
         onClick={addPosition}
-        sx={{ mt: 2, bgcolor: "#ff007b" }}
       >
         Add Position
       </Button>
       <Button
         variant="contained"
+        color="secondary"
         onClick={handleSubmit}
-        sx={{ mt: 2, bgcolor: "#007bff" }}
+        sx={{ mt: 2 }}
       >
-        Submit
+        Save Work History
       </Button>
     </Container>
   );

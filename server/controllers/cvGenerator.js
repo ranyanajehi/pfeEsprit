@@ -27,7 +27,12 @@ export const updateSectionRecords = async (req, res) => {
       default:
         return res.status(400).json({ message: "Invalid section" });
     }
-
+    if (records.length < 0) {
+      await model.deleteMany({ user: req.user._id });
+      res
+        .status(200)
+        .json({ message: `${section} records updated successfully` });
+    }
     // Delete existing records for the user
     await model.deleteMany({ user: req.user._id });
 
@@ -56,6 +61,7 @@ export const getAllUserSections = async (req, res) => {
     const skills = await Skills.findOne({ user: req.user._id });
 
     res.status(200).json({
+      user: req.user,
       education,
       workHistory,
       proj,

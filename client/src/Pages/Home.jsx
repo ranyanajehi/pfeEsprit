@@ -23,7 +23,6 @@ const Home = () => {
   };
   return (
     <>
-      <button onClick={getCookie}>helllllllllll</button>
       <Description />
       <Presentation />
       <StudentJob />

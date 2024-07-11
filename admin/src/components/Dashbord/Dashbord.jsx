@@ -10,7 +10,8 @@ const Dashboard = () => {
   const { isAuthenticated, user } = useContext(Context);
   const [appointments, setAppointments] = useState([]);
   const [studentCount, setStudentCount] = useState(0);
-
+  const [isGraduationsHovered, setIsGraduationsHovered] = useState(false);
+  const [isEvennementsHovered, setIsEvennementsHovered] = useState(false);
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -23,6 +24,7 @@ const Dashboard = () => {
         setAppointments([]);
       }
     };
+
     const fetchStudentCount = async () => {
       try {
         const { data } = await axios.get("http://127.0.0.1:4000/api/v1/user/count", {
@@ -33,6 +35,7 @@ const Dashboard = () => {
         toast.error(error.response.data.message);
       }
     };
+
     fetchAppointments();
     fetchStudentCount();
   }, []);
@@ -61,6 +64,36 @@ const Dashboard = () => {
     return <Navigate to="/login" />;
   }
 
+  const handleGraduationsMouseEnter = () => {
+    setIsGraduationsHovered(true);
+  };
+
+  const handleGraduationsMouseLeave = () => {
+    setIsGraduationsHovered(false);
+  };
+
+  const handleEvennementsMouseEnter = () => {
+    setIsEvennementsHovered(true);
+  };
+
+  const handleEvennementsMouseLeave = () => {
+    setIsEvennementsHovered(false);
+  };
+
+  const styles = {
+    text: {
+      opacity: 0.6,
+      cursor: 'pointer',
+      display: 'flex',
+      fontSize: '1.5em', // Default font size
+      transition: 'font-size 0.2s ease-in-out, color 0.2s ease-in-out'
+    },
+    hoveredText: {
+      fontSize: '1.8em', // Increased font size on hover
+      color: 'white' // Changed text color on hover
+    }
+  };
+
   return (
     <section className="dashboard page">
       <div className="banner">
@@ -74,8 +107,28 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="secondBox">
-          <p>Les Rendez-Vous</p>
-          <h3>1500</h3>
+          <p
+            style={{
+              ...styles.text,
+              ...(isEvennementsHovered && styles.hoveredText)
+            }}
+            onMouseEnter={handleEvennementsMouseEnter}
+            onMouseLeave={handleEvennementsMouseLeave}
+          >
+            Evennements
+          </p>
+        </div>
+        <div className="secondBox">
+          <p
+            style={{
+              ...styles.text,
+              ...(isGraduationsHovered && styles.hoveredText)
+            }}
+            onMouseEnter={handleGraduationsMouseEnter}
+            onMouseLeave={handleGraduationsMouseLeave}
+          >
+            Graduations
+          </p>
         </div>
         <div className="thirdBox">
           <p>Les Inscrit</p>
@@ -107,19 +160,21 @@ const Dashboard = () => {
                   <td>{appointment.levelEnglish}</td>
                   <td>{appointment.hasVisited === true ? <GoCheckCircleFill  className="green"/> : <AiFillCloseCircle  className="red"/>}</td>
                   <td>
-                    <select   className={
-                            appointment.status === "Pending"
-                              ? "value-pending"
-                              : appointment.status === "Accepted"
-                              ? "value-accepted"
-                              : "value-rejected"
-                          }
-                          value={appointment.status}
-                          onChange={(e) =>
-                            handleUpdateStatus(appointment._id, e.target.value)
-                          }  >
-                      <option value="Pending"  className="value-pending">En attente</option>
-                      <option value="Accepted"  className="value-accepted">Confirmer</option>
+                    <select
+                      className={
+                        appointment.status === "Pending"
+                          ? "value-pending"
+                          : appointment.status === "Accepted"
+                            ? "value-accepted"
+                            : "value-rejected"
+                      }
+                      value={appointment.status}
+                      onChange={(e) =>
+                        handleUpdateStatus(appointment._id, e.target.value)
+                      }
+                    >
+                      <option value="Pending" className="value-pending">En attente</option>
+                      <option value="Accepted" className="value-accepted">Confirmer</option>
                       <option value="Rejected" className="value-rejected">Réfuser</option>
                     </select>
                   </td>
