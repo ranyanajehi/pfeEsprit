@@ -14,6 +14,7 @@ import graduationRouter from "./routes/graduationRouter.js"
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
+import { upload } from "./middlewares/multer.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -44,6 +45,8 @@ app.use(
 app.use(urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // app.use(
 //   fileUpload({
 //     useTempFiles: true,
@@ -60,7 +63,6 @@ app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/chat", chatRouter);
 app.use("/api/v1/event",eventRouter);
 app.use("/api/v1/graduation", graduationRouter);
-// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 dbConnection();
 app.use(errorMiddleware);
 export default app;

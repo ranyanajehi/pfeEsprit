@@ -60,13 +60,11 @@ const SideBar = () => {
     setCollapsed(true);
   };
 
-  // Function to navigate to Graduations page
   const gotoGraduationsPage = () => {
     navigateTo("/graduations");
     setCollapsed(true);
   };
 
-  // Function to navigate to Events page
   const gotoEventsPage = () => {
     navigateTo("/events");
     setCollapsed(true);
