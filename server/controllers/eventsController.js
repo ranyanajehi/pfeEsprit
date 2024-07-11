@@ -65,18 +65,27 @@ export const getEventById = async (req, res) => {
 // Update Event
 export const updateEvent = async (req, res) => {
   try {
-    // Handle file upload if a new file is provided
+    console.log(req.body,"req.body");
+
     let imageUrl = req.body.image;
+
     if (req.file) {
       imageUrl = await handleFileUpload(req.file);
     }
 
     const eventData = {
-      ...req.body,
-      image: req.file ? imageUrl : undefined  // Update image path only if a new file is uploaded
+      title: req.body.title,
+      description: req.body.description,
     };
 
+    if (req.file) {
+      eventData.image = imageUrl;
+    }
+
+    console.log(eventData, "eventData");
     const event = await Event.findByIdAndUpdate(req.params.id, eventData, { new: true, runValidators: true });
+    console.log(event, "event");
+
     if (!event) {
       return res.status(404).send();
     }
@@ -85,6 +94,7 @@ export const updateEvent = async (req, res) => {
     res.status(400).send(error);
   }
 };
+
 
 // Delete Event
 export const deleteEvent = async (req, res) => {

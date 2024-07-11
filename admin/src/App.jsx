@@ -13,7 +13,6 @@ import Students from './components/Students/Students.jsx';
 import Dashbord from "./components/Dashbord/Dashbord.jsx";
 import JobOffer from "./components/JobOffer/JobOffer.jsx";
 import Events from "./components/Events/Events.jsx";
-import Graduations from "./components/Graduations/Graduations.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -54,8 +53,6 @@ const App = () => {
           <Route path="/students" element={isAuthenticated ? <Students /> : <Navigate to="/login" />} />
           <Route path="/job" element={isAuthenticated ? <JobOffer /> : <Navigate to="/login" />} />
           <Route path="/events" element={isAuthenticated ? <Events /> : <Navigate to="/events" />} />
-          <Route path="/graduations" element={isAuthenticated ? <Graduations /> : <Navigate to="/graduations" />} />
-
         </Routes>
         <ToastContainer position="top-center" />
       </Router>

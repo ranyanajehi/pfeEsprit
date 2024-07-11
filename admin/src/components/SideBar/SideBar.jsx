@@ -10,7 +10,6 @@ import { RiLogoutBoxFill } from "react-icons/ri";
 import { AiFillMessage } from "react-icons/ai";
 import { MdAddModerator } from "react-icons/md";
 import { FaBriefcase, FaUserGraduate, FaCalendarAlt } from "react-icons/fa"; // Importing FaCalendarAlt for Events
-import { RiGraduationCapFill } from "react-icons/ri";
 
 
 import "./sideBar.css";
@@ -60,10 +59,7 @@ const SideBar = () => {
     setCollapsed(true);
   };
 
-  const gotoGraduationsPage = () => {
-    navigateTo("/graduations");
-    setCollapsed(true);
-  };
+
 
   const gotoEventsPage = () => {
     navigateTo("/events");
@@ -110,10 +106,6 @@ const SideBar = () => {
           <div className="link-item" onClick={gotoMessagesPage}>
             <AiFillMessage size={30} />
             {!collapsed && <span>Messages</span>}
-          </div>
-          <div className="link-item" onClick={gotoGraduationsPage}>
-          <RiGraduationCapFill size={30} />
-            {!collapsed && <span>Graduations</span>}
           </div>
           <div className="link-item" onClick={gotoEventsPage}>
             <FaCalendarAlt size={30} />

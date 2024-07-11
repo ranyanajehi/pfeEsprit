@@ -9,10 +9,10 @@ import './events.css';
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
-
+const [trigger,setTrigger] = useState(false)
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [trigger]);
 
   const fetchEvents = async () => {
     try {
@@ -62,7 +62,7 @@ const EventsPage = () => {
           <p>No events available</p>
         ) : (
           events&&events.map((event) => (
-            <EventCard key={event._id} event={event} onDelete={deleteEvent} />
+            <EventCard key={event._id} event={event} onDelete={deleteEvent} setTrigger = {setTrigger} trigger={trigger} />
           ))
         )}
       </div>
