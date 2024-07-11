@@ -66,6 +66,18 @@ const userSchema = new mongoose.Schema({
     default: `http://localhost:4000/uploads/6d90f194-62e6-414a-8095-ec9348e109de.jpg`,
   },
   rooms: [{ type: ObjectId, ref: "Room" }],
+  description: {
+    type: String,
+  },
+  github: {
+    type: String,
+  },
+  linkedin: {
+    type: String,
+  },
+  about: {
+    type: String,
+  },
 });
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {

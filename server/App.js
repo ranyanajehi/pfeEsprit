@@ -9,6 +9,15 @@ import studentRouter from "./routes/userRouter.js";
 import appointmentRouter from "./routes/appointmentRouter.js";
 import jobRouter from "./routes/jobRouter.js";
 import chatRouter from "./routes/chatRouter.js";
+import {
+  updateSectionRecords,
+  getAllUserSections,
+} from "./controllers/cvGenerator.js";
+import {
+  isStudentAuthenticated,
+  isAdminAuthenticated,
+} from "./middlewares/auth.js";
+import { upload } from "./middlewares/multer.js";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -59,6 +68,8 @@ app.use("/api/v1/user", studentRouter);
 app.use("/api/v1/appointment", appointmentRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/chat", chatRouter);
+app.post("/updateSections", isStudentAuthenticated, updateSectionRecords);
+app.get("/getSections", isStudentAuthenticated, getAllUserSections);
 
 dbConnection();
 app.use(errorMiddleware);

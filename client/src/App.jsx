@@ -28,6 +28,7 @@ import Dashbord from "./Pages/Dashbord.jsx";
 import Chat from "./Pages/chat.jsx";
 import "./App.css";
 import Cookies from "js-cookie";
+import CvGenerator from "./Pages/CvGenerator.jsx";
 const App = () => {
   const { token, setToken } = useContext(Context);
   useEffect(() => {
@@ -42,6 +43,8 @@ const App = () => {
           <Route path="/dashboard" element={<DashboardStudent />}>
             <Route index element={<MessageStudentPage />} />
             <Route path="/dashboard/chat" element={<Chat />} />
+            <Route path="/dashboard/cv" element={<CvGenerator />} />
+
             <Route path="/dashboard/jobOffer" element={<JobOffer />} />
           </Route>
           <Route path="/" element={<Home />} />
