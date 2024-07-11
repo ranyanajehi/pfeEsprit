@@ -1,8 +1,18 @@
 import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import moment from "moment";
+import PdfPreview from "./pdf.jsx";
 // import { byPrefixAndName } from "@awesome.me/kit-KIT_CODE/icons";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 const ChatMessages = ({
+  selectedChatId,
+  isTyping,
+  typingStatus,
+  enableButton,
+  handleInputChange,
+  cancelFileUpload,
+  filePreview,
+  user,
   chat,
   handleFormSubmit,
   messageInputRef,
@@ -11,7 +21,13 @@ const ChatMessages = ({
   handleFileChange,
 }) => {
   const messageWrapRef = useRef(null);
+  console.log("file preview", filePreview);
   //   const messageInputRef = useRef(null);
+  const calculateDuration = (createdAt) => {
+    const now = moment();
+    const created = moment(createdAt);
+    return moment.duration(now.diff(created)).humanize();
+  };
 
   useEffect(() => {
     if (messageWrapRef.current) {
@@ -33,21 +49,73 @@ const ChatMessages = ({
             <h4>Loading</h4>
           </div>
           <div className="message-wrap" id="message-wrap" ref={messageWrapRef}>
-            {chat.messages.map((message, index) => (
-              <div className="message" key={index}>
-                <img src={chat.avatar} alt={chat.username} />
-                <p>{message}</p>
-              </div>
-            ))}
+            {chat.map((message, index) => {
+              return (
+                <div
+                  className={
+                    message.sender._id === user._id
+                      ? "message myMessage"
+                      : "message"
+                  }
+                  key={index}
+                >
+                  <div className="avatar_date">
+                    <img
+                      className="avatar_chat"
+                      src={message.sender.studentAvatar}
+                      alt={index}
+                    />
+                    <p className="chat_date">
+                      {calculateDuration(message.createdAt)}
+                    </p>
+                  </div>
+                  {message.media === "text" && (
+                    <p className="chat_message">{message.message}</p>
+                  )}
+                  {message.media === "image" && (
+                    <img
+                      className="chat_media"
+                      src={`http://localhost:4000/uploads/${message.message}`}
+                      alt={index}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
           <footer className="footer_chat">
+            {isTyping && (
+              <div className="typing-container">
+                <div className="typing">{typingStatus}</div>
+              </div>
+            )}
+            {filePreview.file && filePreview.type.includes("/pdf") && (
+              <PdfPreview
+                pdfUrl={filePreview.file}
+                cancelFileUpload={cancelFileUpload}
+              />
+            )}
+            {filePreview.file && filePreview.type.includes("image") && (
+              <div className="pdf_holder">
+                <img
+                  className="preview_img"
+                  src={filePreview.file}
+                  alt="Preview"
+                />
+                <button className="close-button" onClick={cancelFileUpload}>
+                  ×
+                </button>
+              </div>
+            )}
             <form id="chat-form" onSubmit={handleFormSubmit}>
-              <input
+              <textarea
                 type="text"
                 id="message-input"
                 placeholder="Enter a message"
                 ref={messageInputRef}
                 autoComplete="off"
+                onChange={handleInputChange}
+                disabled={enableButton}
               />
               <div>
                 <FontAwesomeIcon
@@ -56,6 +124,7 @@ const ChatMessages = ({
                   onClick={handleIconClick}
                 />
                 <input
+                  accept=".pdf,image/*"
                   type="file"
                   ref={fileInputRef}
                   className="hidden-file-input"

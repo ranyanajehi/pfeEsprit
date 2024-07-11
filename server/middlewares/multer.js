@@ -33,7 +33,11 @@ import fs from "fs";
 const __dirname = path.resolve();
 const uploadDir = path.join(__dirname, "uploads");
 
-// Create the uploads directory if it doesn't exist
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import { fileURLToPath } from "url";
+
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }

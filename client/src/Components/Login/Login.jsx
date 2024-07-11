@@ -5,6 +5,7 @@ import { useBeforeUnload, Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Context } from "../../main";
+import { socket } from "../../helpers/socket.js";
 
 const Login = () => {
   const { token, setToken } = useContext(Context);
@@ -28,15 +29,15 @@ const Login = () => {
           { email, password, role: "Student" },
           {
             withCredentials: true,
-            headers: { "Content-Type": "application/json" },
           }
         )
         .then((res) => {
           // console.log("res.data", );
 
           toast.success(res.data.message);
-          console.log("token", res.data.token);
-          setToken(res.data.token); // setToken(res.data.token);
+          console.log("token", res.data);
+          setToken(res.data.token);
+          // socket.emit("join", res.data.user._id);
           navigateTo("/");
           setEmail("");
           setPassword("");

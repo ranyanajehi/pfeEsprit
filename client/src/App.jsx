@@ -27,10 +27,12 @@ import Scroller from "./Pages/Scoller.jsx";
 import Dashbord from "./Pages/Dashbord.jsx";
 import Chat from "./Pages/chat.jsx";
 import "./App.css";
-
+import Cookies from "js-cookie";
 const App = () => {
   const { token, setToken } = useContext(Context);
-
+  useEffect(() => {
+    Cookies.set("studentToken", token, { expires: 365, path: "/" });
+  }, [token]);
   return (
     <>
       <Router>
@@ -50,8 +52,8 @@ const App = () => {
 
           <Route path="/CV" element={<CVStudent />} />
         </Routes>
-        <Footer />
-        <ToastContainer position="top-center" />
+        {/* <Footer />
+        <ToastContainer position="top-center" /> */}
       </Router>
     </>
   );
