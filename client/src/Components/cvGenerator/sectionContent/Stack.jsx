@@ -302,14 +302,15 @@ const Skills = () => {
           Add Language
         </Button>
       </Box>
-
-      <Button
-        variant="contained"
-        sx={{ bgcolor: "#ff007b", mt: 5 }}
-        onClick={handleUpdate}
-      >
-        Update Skills
-      </Button>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
+        <Button
+          variant="contained"
+          sx={{ bgcolor: "#ff007b", mt: 5 }}
+          onClick={handleUpdate}
+        >
+          Update Skills
+        </Button>
+      </Box>
     </Container>
   );
 };

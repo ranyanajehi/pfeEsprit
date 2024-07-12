@@ -251,22 +251,23 @@ const WorkHistory = () => {
           </Accordion>
         </Box>
       ))}
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<AddIcon />}
-        onClick={addPosition}
-      >
-        Add Position
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleSubmit}
-        sx={{ mt: 2 }}
-      >
-        Save Work History
-      </Button>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}>
+        <Button
+          variant="outlined"
+          sx={{ color: "#ff007b" }}
+          startIcon={<AddIcon />}
+          onClick={addPosition}
+        >
+          Add Position
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ ml: 2, bgcolor: "#ff007b" }}
+          onClick={handleSubmit}
+        >
+          Save Work History
+        </Button>
+      </Box>
     </Container>
   );
 };

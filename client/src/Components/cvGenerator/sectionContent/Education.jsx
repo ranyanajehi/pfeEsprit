@@ -201,7 +201,7 @@ const Education = () => {
         </Button>
         <Button
           variant="contained"
-          sx={{ bgcolor: "#ff007b" }}
+          sx={{ ml: 2, bgcolor: "#ff007b" }}
           onClick={handleUpdate}
         >
           Update Education

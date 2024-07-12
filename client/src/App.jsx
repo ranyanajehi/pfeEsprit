@@ -6,7 +6,9 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+import CreateCv from "./Components/cvGenerator/createCv/createCv.jsx";
 import { ToastContainer } from "react-toastify";
+import StudentPreview from "./Components/cvGenerator/sectionContent/preview.jsx";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./Pages/Home.jsx";
 import OurProgram from "./Pages/OurProgram.jsx";
@@ -44,10 +46,13 @@ const App = () => {
             <Route index element={<MessageStudentPage />} />
             <Route path="/dashboard/chat" element={<Chat />} />
             <Route path="/dashboard/cv" element={<CvGenerator />} />
+            <Route path="/dashboard/preview" element={<StudentPreview />} />
+            <Route path="/dashboard/createCv" element={<CreateCv />} />
 
             <Route path="/dashboard/jobOffer" element={<JobOffer />} />
           </Route>
           <Route path="/" element={<Home />} />
+
           <Route path="/about" element={<OurProgram />} />
           <Route path="/appointment" element={<Appointment />} />
           <Route path="/register" element={<Register />} />

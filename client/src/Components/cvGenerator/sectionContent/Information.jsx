@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   TextField,
@@ -9,53 +9,121 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import { PhotoCamera } from "@mui/icons-material";
+import { KeyTwoTone, PhotoCamera } from "@mui/icons-material";
+import axios from "axios";
 import useForm from "../../../helpers/useForm.jsx";
 import validate from "../../../helpers/validate.jsx";
 
 const Information = () => {
+  const [preview, setPreview] = useState(null);
+  const [img, setImage] = useState("");
   const initialState = {
-    profilePhoto: { value: null, touched: false, required: false },
+    profilePhoto: {
+      value:
+        "http://localhost:4000/uploads/6d90f194-62e6-414a-8095-ec9348e109de.jpg",
+      touched: false,
+      required: false,
+    },
     github: {
-      value: "https://github.com/jdidi94",
+      value: "",
       touched: false,
       required: true,
       requiredMessage: "GitHub URL is required!",
     },
     linkedin: {
-      value: "https://www.linkedin.com/in/jdidi-da/",
+      value: "",
       touched: false,
       required: true,
       requiredMessage: "LinkedIn URL is required!",
     },
     about: {
-      value:
-        "After an excited six-month-experience in RBK (ReBootkamp Tunisia) Web Development Boot camp and the hard work in IT that I give it my all-time and interest, I had engaged in more than 1 year in achieving my high standards web development experience—freelancing, making my projects and ideas, developing an experience from taking the product prototype from design and...",
+      value: "",
       touched: false,
       required: true,
       requiredMessage: "About section is required!",
     },
   };
 
-  const { formData, errors, changeHandler } = useForm(initialState, validate);
-
-  const handleProfilePhotoChange = (event) => {
-    changeHandler({
-      target: {
-        name: "profilePhoto",
-        type: "file",
-        files: event.target.files,
-      },
-    });
+  const { formData, errors, changeHandler, setFormData } = useForm(
+    initialState,
+    validate
+  );
+  const getCurrentUser = async () => {
+    try {
+      const { data } = await axios(
+        "http://localhost:4000/api/v1/user/student/me",
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("user", data.user);
+      setFormData({
+        profilePhoto: {
+          value: `http://localhost:4000/uploads/${data.user.studentAvatar}`,
+          touched: false,
+          required: false,
+        },
+        github: {
+          value: data.user.github,
+          touched: false,
+          required: true,
+          requiredMessage: "GitHub URL is required!",
+        },
+        linkedin: {
+          value: data.user.linkedin,
+          touched: false,
+          required: true,
+          requiredMessage: "LinkedIn URL is required!",
+        },
+        about: {
+          value: data.user.about,
+          touched: false,
+          required: true,
+          requiredMessage: "About section is required!",
+        },
+      });
+      setImage(data.user.studentAvatar);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  const handleUpdate = () => {
+  const handleProfilePhotoChange = (event) => {
+    setPreview(event.target.files[0]);
+  };
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
+  const handleUpdate = async () => {
     // Handle update logic
     console.log({
       github: formData.github.value,
       linkedin: formData.linkedin.value,
       about: formData.about.value,
+      studentAvatar: img,
+      file: preview,
     });
+    try {
+      const form = new FormData();
+      form.append("github", formData.github.value);
+      form.append("linkedin", formData.linkedin.value);
+      form.append("about", formData.about.value);
+      form.append("studentAvatar", img);
+      form.append("file", preview);
+      console.log("form", form);
+      const { data } = await axios.put(
+        "http://localhost:4000/api/v1/user/updateCv",
+        form,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("updated", data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -66,9 +134,7 @@ const Information = () => {
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Avatar
           src={
-            formData.profilePhoto.value
-              ? URL.createObjectURL(formData.profilePhoto.value[0])
-              : null
+            preview ? URL.createObjectURL(preview) : formData.profilePhoto.value
           }
           sx={{ width: 100, height: 100, mr: 2 }}
         />
@@ -148,9 +214,6 @@ const Information = () => {
           onClick={handleUpdate}
         >
           Update information
-        </Button>
-        <Button variant="outlined" sx={{ ml: 2, color: "#ff007b" }}>
-          Cancel
         </Button>
       </Box>
     </Container>
