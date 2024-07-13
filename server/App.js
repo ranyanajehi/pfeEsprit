@@ -9,8 +9,17 @@ import studentRouter from "./routes/userRouter.js";
 import appointmentRouter from "./routes/appointmentRouter.js";
 import jobRouter from "./routes/jobRouter.js";
 import chatRouter from "./routes/chatRouter.js";
-import eventRouter from "./routes/eventRouter.js"
-import graduationRouter from "./routes/graduationRouter.js"
+import {
+  updateSectionRecords,
+  getAllUserSections,
+} from "./controllers/cvGenerator.js";
+import {
+  isStudentAuthenticated,
+  isAdminAuthenticated,
+} from "./middlewares/auth.js";
+
+import eventRouter from "./routes/eventRouter.js";
+import graduationRouter from "./routes/graduationRouter.js";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -51,15 +60,6 @@ app.use(urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-
-// app.use(
-//   fileUpload({
-//     useTempFiles: true,
-//     tempFileDir: "/tmp/",
-//   })
-// );
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.get("/hello", function (req, res) {
   res.send("hello");
 });
@@ -68,11 +68,11 @@ app.use("/api/v1/user", studentRouter);
 app.use("/api/v1/appointment", appointmentRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/chat", chatRouter);
-app.use("/api/v1/event",eventRouter);
+app.post("/updateSections", isStudentAuthenticated, updateSectionRecords);
+app.get("/getSections", isStudentAuthenticated, getAllUserSections);
+
+app.use("/api/v1/event", eventRouter);
 app.use("/api/v1/graduation", graduationRouter);
-
-
-console.log(path.join(__dirname, "/middlewares/uploads"));
 
 dbConnection();
 app.use(errorMiddleware);

@@ -1,9 +1,15 @@
 import express from "express";
 const app = express();
+import { v4 as uuidv4 } from "uuid";
 import http from "http";
+import fs from "fs";
 import { Server } from "socket.io";
 import cors from "cors";
 const server = http.createServer(app);
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173",
@@ -15,6 +21,7 @@ app.use(
     origin: "http://localhost:5173",
   })
 );
+
 const chatNamespace = io.of("/chat");
 chatNamespace.on("connection", (socket) => {
   console.log("a user connected", socket.id);
@@ -27,7 +34,39 @@ chatNamespace.on("connection", (socket) => {
     console.log("user typing", data);
     socket.to(data.roomId).emit("typing", data);
   });
+  socket.on("fileUpload", (data) => {
+    const { file } = data;
+    console.log("user uploaded file", file);
 
+    const uniqueFileName = `${uuidv4()}-${file.filename}`;
+    const filePath = path.join(__dirname, "/uploads", uniqueFileName);
+
+    const writeStream = fs.createWriteStream(filePath);
+    writeStream.write(Buffer.from(new Uint8Array(file.buffer)));
+    writeStream.end();
+
+    writeStream.on("finish", () => {
+      console.log("File saved:", uniqueFileName);
+
+      // Send back the file information only to the uploader
+      chatNamespace.emit("fileUploadResponse", {
+        success: true,
+        message: "File uploaded successfully",
+        file: {
+          name: uniqueFileName,
+          url: `http://localhost:3000/uploads/${uniqueFileName}`,
+        },
+      });
+    });
+
+    writeStream.on("error", (err) => {
+      console.error("Error writing file:", err);
+      socket.emit("fileUploadResponse", {
+        success: false,
+        message: "File upload failed",
+      });
+    });
+  });
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);
   });

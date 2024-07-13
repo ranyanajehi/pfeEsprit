@@ -12,21 +12,27 @@ import ChatMessages from "./ChatMessages.jsx";
 import { SocketContext } from "../../context/socket.jsx";
 
 import { Context } from "../../main.jsx";
-
+import useFileUpload from "../../helpers/fileUploader.jsx";
 import "./chat.css";
 const MainChat = () => {
   const { token, setToken } = useContext(Context);
-  const { chatSocket, notificationSocket } = useContext(SocketContext);
+
+  const { chatSocket } = useContext(SocketContext);
+  const { handleFileChangeSocket, handleSubmitFile, fileSocket } =
+    useFileUpload(chatSocket);
   const [user, setUser] = useState({});
+  const [uploader, setUploader] = useState(null);
   const [rooms, setRooms] = useState([]);
   const [filePreview, setFilePreview] = useState({ file: null, type: "text" });
   const [selectedFile, setSelectedFile] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [enableButton, setEnable] = useState(false);
   const [typingStatus, setTypingStatus] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
   const [selectedChatId, setSelectedChatId] = useState(null);
   const fileInputRef = useRef(null);
   const messageInputRef = useRef(null);
+  const messageEndRef = useRef(null);
   const [chats, setChats] = useState([]);
   const calculateDuration = (createdAt) => {
     const now = moment();
@@ -34,8 +40,26 @@ const MainChat = () => {
     return moment.duration(now.diff(created)).humanize();
   };
   useEffect(() => {
+    // Scroll to the bottom of the chat when a new message is added
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chats]);
+  useEffect(() => {
     chatSocket.on("connect", () => {
       console.log("Connected", chatSocket.id);
+    });
+    chatSocket.on("fileUploadResponse", (response) => {
+      if (response.success) {
+        // alert(response.file.name);
+        console.log(
+          "upload filec hsdhsdhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",
+          response
+        );
+        setUploader(response.file.name);
+      } else {
+        alert("File upload failed");
+      }
     });
     // // Fetch initial chat messages and notifications
     // axios
@@ -73,6 +97,7 @@ const MainChat = () => {
     return () => {
       chatSocket.off("chat_message");
       chatSocket.off("typing");
+      chatSocket.off("fileUploadResponse");
     };
   }, []);
   const getCurrentUser = async () => {
@@ -110,10 +135,12 @@ const MainChat = () => {
   };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    handleFileChangeSocket(event);
     console.log("check file:", file);
     if (file.type === "application/pdf") {
       setFilePreview({ file: file, type: file.type });
       setSelectedFile(file);
+
       setEnable(true);
       return;
     }
@@ -133,10 +160,12 @@ const MainChat = () => {
     messageInputRef.current.value = "";
     setSelectedFile("");
     setFilePreview({ file: null, type: "text" });
+    setLoading(true);
     chatSocket.emit("join", id);
     const data = await axios.get(`http://localhost:4000/api/v1/chat/${id}`);
     setChats(data.data);
     console.log(data.data);
+    setLoading(false); // Set loading to false once data is fetched
   };
   const getAllMessagesForOneRooom = async () => {
     try {
@@ -183,11 +212,6 @@ const MainChat = () => {
       formData.append("userId", user._id);
       formData.append("roomId", selectedChatId);
       formData.append("media", "text");
-      // setChats((prevChats) =>
-
-      //         [prevChats, text]
-
-      // )
     }
     try {
       console.log("FormData fields:");
@@ -200,11 +224,11 @@ const MainChat = () => {
         if (key === "content") {
           formObject["message"] = value;
           if (selectedFile) {
-            formObject["message"] = URL.createObjectURL(selectedFile);
+            formObject["message"] = uploader;
           }
         }
       });
-      formObject.createdAt = calculateDuration(new Date());
+      formObject.createdAt = new Date();
       formObject.sender = user;
       chatSocket.emit("chat_message", formObject);
       const sendMessage = await axios.post(
@@ -228,8 +252,15 @@ const MainChat = () => {
   return (
     <div className="container_chat">
       <div className="chat_inbox">
-        <ChatList rooms={rooms} selectChat={selectChat} user={user} />
+        <ChatList
+          rooms={rooms}
+          selectedChatId={selectedChatId}
+          selectChat={selectChat}
+          user={user}
+        />
         <ChatMessages
+          loading={loading}
+          messageEndRef={messageEndRef}
           selectedChatId={selectedChatId}
           isTyping={typingStatus}
           typingStatus={typingStatus}
