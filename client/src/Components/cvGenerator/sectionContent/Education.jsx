@@ -9,12 +9,15 @@ import {
   IconButton,
   Checkbox,
 } from "@mui/material";
+import ConfirmationDialog from "../../mini-components/modal.jsx";
 
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { useUser } from "../../../context/cvGeneratorContext.jsx";
 const Education = () => {
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
   const [educations, setEducations] = useState([
     {
       degree: "",
@@ -74,7 +77,23 @@ const Education = () => {
     setEducations(values);
     updateUserRecord({ records: educations, section: "education" });
   };
+  // ************************************
+  const handleConfirm = () => {
+    console.log("Confirmed!");
+    // Place your confirmation logic here
+    handleUpdate();
+    setDialogOpen(false);
+  };
 
+  const handleCancel = () => {
+    setDialogOpen(false);
+  };
+
+  const openDialog = () => {
+    setDialogOpen(true);
+  };
+
+  // **************************************
   const handleUpdate = () => {
     // Handle update logic
     console.log(educations);
@@ -201,12 +220,27 @@ const Education = () => {
         </Button>
         <Button
           variant="contained"
-          sx={{ ml: 2, bgcolor: "#ff007b" }}
-          onClick={handleUpdate}
+          sx={{
+            ml: 2,
+            fontSize: 20,
+            bgcolor: "#ff007b",
+            "&:hover": {
+              bgcolor: "white", // Background color on hover
+              color: "#ff007b",
+            },
+          }}
+          onClick={openDialog}
         >
           Update Education
         </Button>
       </Box>
+      <ConfirmationDialog
+        open={isDialogOpen}
+        title="Update Education"
+        content="Are you sure you want to update education?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </Container>
   );
 };

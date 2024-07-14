@@ -103,12 +103,12 @@ const ChatMessages = ({
                 <div className="typing">{typingStatus}</div>
               </div>
             )}
-            {/* {filePreview.file && filePreview.type.includes("/pdf") && (
+            {filePreview.file && filePreview.type.includes("/pdf") && (
               <PdfPreview
                 pdfUrl={filePreview.file}
                 cancelFileUpload={cancelFileUpload}
               />
-            )} */}
+            )}
             {filePreview.file && filePreview.type.includes("image") && (
               <div className="pdf_holder">
                 <img

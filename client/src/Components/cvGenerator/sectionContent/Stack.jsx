@@ -12,11 +12,14 @@ import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { useUser } from "../../../context/cvGeneratorContext.jsx";
+import ConfirmationDialog from "../../mini-components/modal.jsx";
 
 const skillLevels = ["Beginner", "Intermediate", "Advanced", "Expert"];
 const proficiencyLevels = ["Basic", "Conversational", "Fluent", "Native"];
 
 const Skills = () => {
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
   const { user, getCurrentUser, updateUserRecord } = useUser();
   const [technicalSkills, setTechnicalSkills] = useState([
     { skill: "", level: "" },
@@ -90,7 +93,23 @@ const Skills = () => {
         break;
     }
   };
+  // ************************************
+  const handleConfirm = () => {
+    console.log("Confirmed!");
+    // Place your confirmation logic here
+    handleUpdate();
+    setDialogOpen(false);
+  };
 
+  const handleCancel = () => {
+    setDialogOpen(false);
+  };
+
+  const openDialog = () => {
+    setDialogOpen(true);
+  };
+
+  // **************************************
   const handleUpdate = () => {
     // Handle update logic
     console.log({ technicalSkills, softSkills, languages });
@@ -305,12 +324,27 @@ const Skills = () => {
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
         <Button
           variant="contained"
-          sx={{ bgcolor: "#ff007b", mt: 5 }}
-          onClick={handleUpdate}
+          sx={{
+            fontSize: 20,
+            bgcolor: "#ff007b",
+            "&:hover": {
+              bgcolor: "white", // Background color on hover
+              color: "#ff007b",
+            },
+            mt: 5,
+          }}
+          onClick={openDialog}
         >
           Update Skills
         </Button>
       </Box>
+      <ConfirmationDialog
+        open={isDialogOpen}
+        title="Update your skills"
+        content="Are you sure you want to update skills?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </Container>
   );
 };

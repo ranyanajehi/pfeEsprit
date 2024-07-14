@@ -10,12 +10,14 @@ import {
   Tooltip,
 } from "@mui/material";
 import { KeyTwoTone, PhotoCamera } from "@mui/icons-material";
+import ConfirmationDialog from "../../mini-components/modal.jsx";
 import axios from "axios";
 import useForm from "../../../helpers/useForm.jsx";
 import validate from "../../../helpers/validate.jsx";
 
 const Information = () => {
   const [preview, setPreview] = useState(null);
+  const [isDialogOpen, setDialogOpen] = useState(false);
   const [img, setImage] = useState("");
   const initialState = {
     profilePhoto: {
@@ -48,6 +50,23 @@ const Information = () => {
     initialState,
     validate
   );
+  // ************************************
+  const handleConfirm = () => {
+    console.log("Confirmed!");
+    // Place your confirmation logic here
+    handleUpdate();
+    setDialogOpen(false);
+  };
+
+  const handleCancel = () => {
+    setDialogOpen(false);
+  };
+
+  const openDialog = () => {
+    setDialogOpen(true);
+  };
+
+  // **************************************
   const getCurrentUser = async () => {
     try {
       const { data } = await axios(
@@ -210,12 +229,27 @@ const Information = () => {
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
         <Button
           variant="contained"
-          sx={{ ml: 2, bgcolor: "#ff007b" }}
-          onClick={handleUpdate}
+          sx={{
+            ml: 2,
+            fontSize: 20,
+            bgcolor: "#ff007b",
+            "&:hover": {
+              bgcolor: "white", // Background color on hover
+              color: "#ff007b",
+            },
+          }}
+          onClick={openDialog}
         >
           Update information
         </Button>
       </Box>
+      <ConfirmationDialog
+        open={isDialogOpen}
+        title="Update information"
+        content="Are you sure you want to update information?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </Container>
   );
 };

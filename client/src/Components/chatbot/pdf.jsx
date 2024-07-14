@@ -2,19 +2,17 @@ import React, { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import img from "../../images/pdf.png";
+
 // Specify the URL for the worker
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 const PdfPreview = ({ pdfUrl, cancelFileUpload }) => {
-  console.log("pdfUrl", pdfUrl);
-
+  const [numPages, setNumPages] = useState(null);
   const [error, setError] = useState(null);
 
   const onDocumentLoadSuccess = ({ numPages }) => {
-    const promises = [];
+    setNumPages(numPages);
+    setError(null); // Clear any previous error
   };
 
   const onDocumentLoadError = (error) => {
@@ -24,24 +22,31 @@ const PdfPreview = ({ pdfUrl, cancelFileUpload }) => {
 
   return (
     <div className="pdf_holder">
-      <Document
-        file={pdfUrl}
-        onLoadSuccess={onDocumentLoadSuccess}
-        onLoadError={onDocumentLoadError}
-        loading="Loading PDF..."
-      >
-        <div>
-          <img
-            src={img}
-            alt=""
-            style={{ width: "100px", height: "150px", margin: "20px" }}
-          />
-          <p className="pdf_name">{pdfUrl.name}</p>
-          <button className="close-button" onClick={cancelFileUpload}>
-            ×
-          </button>
-        </div>
-      </Document>
+      {error ? (
+        <p className="error">{error}</p>
+      ) : (
+        <Document
+          file={pdfUrl}
+          onLoadSuccess={onDocumentLoadSuccess}
+          onLoadError={onDocumentLoadError}
+          loading="Loading PDF..."
+        >
+          {Array.from(new Array(numPages), (el, index) => (
+            <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+          ))}
+        </Document>
+      )}
+      <div>
+        <img
+          src={img}
+          alt="PDF Thumbnail"
+          style={{ width: "100px", height: "150px", margin: "20px" }}
+        />
+        <p className="pdf_name">{pdfUrl.name ? pdfUrl.name : pdfUrl}</p>
+        <button className="close-button" onClick={cancelFileUpload}>
+          ×
+        </button>
+      </div>
     </div>
   );
 };

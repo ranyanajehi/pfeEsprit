@@ -1,123 +1,123 @@
-// src/CV.js
-import React from "react";
-import { Container, Box, Typography, Avatar, Grid } from "@mui/material";
-import {
-  Email,
-  Phone,
-  GitHub,
-  LinkedIn,
-  Description,
-} from "@mui/icons-material";
-
-const CV = ({ data }) => {
+import React, { forwardRef } from "react";
+import "./CreateCv.css";
+const Resume = ({ data }) => {
   const { user, education, workHistory, proj, skills } = data;
-
   return (
-    <Container maxWidth="md">
-      <Box textAlign="center" my={4}>
-        <Avatar
-          alt={user.firstName}
-          src={user.studentAvatar}
-          sx={{ width: 100, height: 100, margin: "auto" }}
+    <div id="resume_cv">
+      <div className="header_cv">
+        <img
+          src={`http://localhost:4000/uploads/${user.studentAvatar}`}
+          alt={`${user.firstName} ${user.lastName}`}
         />
-        <Typography variant="h4" color="#ff007b" mt={2}>
-          {user.firstName} {user.lastName}
-        </Typography>
-        <Typography variant="h6">
-          Full-stack JavaScript Developer ∼ Tech Lead
-        </Typography>
-        <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-          <Email /> <Typography ml={1}>{user.email}</Typography>
-        </Box>
-        <Box display="flex" justifyContent="center" alignItems="center" mt={1}>
-          <Phone /> <Typography ml={1}>{user.phone}</Typography>
-        </Box>
-        <Box display="flex" justifyContent="center" alignItems="center" mt={1}>
-          <GitHub /> <Typography ml={1}>{user.github}</Typography>
-        </Box>
-        <Box display="flex" justifyContent="center" alignItems="center" mt={1}>
-          <LinkedIn /> <Typography ml={1}>{user.linkedin}</Typography>
-        </Box>
-      </Box>
+        <div className="info_cv">
+          <h1>
+            {user.firstName} {user.lastName}
+          </h1>
+          <h2>{user.role}</h2>
+          <div className="contacts_cv">
+            <span>
+              <i className="fas fa-envelope"></i> {user.email}
+            </span>
+            <span>
+              <i className="fas fa-phone"></i> {user.phone}
+            </span>
+            <span>
+              <i className="fab fa-github"></i>{" "}
+              <a href={user.github}>{user.github}</a>
+            </span>
+            <span>
+              <i className="fab fa-linkedin"></i>{" "}
+              <a href={user.linkedin}>{user.linkedin}</a>
+            </span>
+          </div>
+          <p>{user.about}</p>
+        </div>
+      </div>
 
-      <Section title="Summary">
-        <Typography>{user.about}</Typography>
-      </Section>
-
-      <Section title="Skills">
-        <Typography variant="h6">Technical Skills</Typography>
-        {skills.technicalSkills.map((skill, index) => (
-          <Typography key={index}>
-            {skill.skill}: {skill.level}
-          </Typography>
-        ))}
-        <Typography variant="h6" mt={2}>
-          Soft Skills
-        </Typography>
-        {skills.softSkills.map((skill, index) => (
-          <Typography key={index}>{skill.skill}</Typography>
-        ))}
-        <Typography variant="h6" mt={2}>
-          Languages
-        </Typography>
-        {skills.languages.map((lang, index) => (
-          <Typography key={index}>
-            {lang.language}: {lang.proficiency}
-          </Typography>
-        ))}
-      </Section>
-
-      <Section title="Projects">
-        {proj.map((project, index) => (
-          <Box key={index} my={2}>
-            <Typography variant="h6">{project.name}</Typography>
-            <Typography>{project.githubLink}</Typography>
-            <Typography>{project.techStack.languages.join(", ")}</Typography>
-            <Typography>{project.techStack.frontend.join(", ")}</Typography>
-            <Typography>{project.techStack.backend.join(", ")}</Typography>
-            <Typography>{project.techStack.database.join(", ")}</Typography>
-            <Typography>{project.techStack.cloud.join(", ")}</Typography>
-          </Box>
-        ))}
-      </Section>
-
-      <Section title="Education">
+      <div className="section_cv">
+        <h3>Education</h3>
         {education.map((edu, index) => (
-          <Box key={index} my={2}>
-            <Typography variant="h6">{edu.degree}</Typography>
-            <Typography>{edu.college}</Typography>
-            <Typography>{edu.level}</Typography>
-            <Typography>
-              {edu.startDate} - {edu.stillEnrolled ? "Present" : edu.endDate}
-            </Typography>
-          </Box>
+          <div className="item_cv" key={index}>
+            <h4>
+              {edu.degree} - {edu.college}
+            </h4>
+            <p>
+              {edu.startDate} - {edu.endDate}
+            </p>
+          </div>
         ))}
-      </Section>
+      </div>
 
-      <Section title="Work History">
+      <div className="section_cv">
+        <h3>Work History</h3>
         {workHistory.map((work, index) => (
-          <Box key={index} my={2}>
-            <Typography variant="h6">
+          <div className="item_cv" key={index}>
+            <h4>
               {work.position} at {work.company}
-            </Typography>
-            <Typography>
-              {work.startDate} - {work.isCurrent ? "Present" : work.endDate}
-            </Typography>
-            <Typography>{work.employmentType}</Typography>
-          </Box>
+            </h4>
+            <p>
+              {work.startDate} - {work.endDate}
+            </p>
+            <p>{work.description}</p>
+          </div>
         ))}
-      </Section>
-    </Container>
+      </div>
+
+      <div className="section_cv">
+        <h3>Projects</h3>
+        {proj.map((project, index) => (
+          <div className="item_cv" key={index}>
+            <h4>{project.name}</h4>
+            <p>
+              <a href={project.githubLink}>{project.githubLink}</a>
+            </p>
+            <p>{project.description}</p>
+            <p>
+              <strong>Tech Stack:</strong>
+            </p>
+            <ul>
+              {Object.entries(project.techStack).map(([key, value], index) => (
+                <li key={index}>
+                  <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
+                  {value.join(", ")}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div className="section_cv skills_cv">
+        <h3>Skills</h3>
+        <div>
+          <h4>Technical Skills</h4>
+          {skills.technicalSkills.map((skill, index) => (
+            <div className="skill_cv" key={index}>
+              <span>{skill.skill}</span>
+              <span>{skill.level}</span>
+            </div>
+          ))}
+        </div>
+        <div>
+          <h4>Soft Skills</h4>
+          {skills.softSkills.map((skill, index) => (
+            <div className="skill_cv" key={index}>
+              <span>{skill.skill}</span>
+            </div>
+          ))}
+        </div>
+        <div>
+          <h4>Languages</h4>
+          {skills.languages.map((language, index) => (
+            <div className="skill_cv" key={index}>
+              <span>{language.language}</span>
+              <span>{language.proficiency}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
-const Section = ({ title, children }) => (
-  <Box my={4}>
-    <Typography variant="h5" color="#ff007b">
-      {title}
-    </Typography>
-    <Box mt={2}>{children}</Box>
-  </Box>
-);
-
-export default CV;
+export default Resume;

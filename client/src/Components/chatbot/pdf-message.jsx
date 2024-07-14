@@ -10,7 +10,7 @@ const PdfMessage = ({ pdfUrl, cancelFileUpload }) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [error, setError] = useState(null);
-
+  console.log("pdfUrldsffffffffffff", pdfUrl);
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
   };

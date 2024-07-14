@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container, Button, TextField, Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import OneSection from "./OneSection.jsx";
 import Information from "./sectionContent/Information.jsx";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
@@ -13,6 +14,8 @@ import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import Skills from "./sectionContent/Stack.jsx";
 import BoltIcon from "@mui/icons-material/Bolt";
 import { UserProvider } from "../../context/cvGeneratorContext.jsx";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 const initialSections = [
   {
     id: 1,
@@ -48,50 +51,109 @@ const initialSections = [
 
 const AllSections = () => {
   const [sections, setSections] = useState(initialSections);
-
+  const navigate = useNavigate();
   return (
     <UserProvider>
-      <Container
-        maxWidth={true}
-        // sx={{
-        //   // width: "100%",
-        //   // display: "flex",
-        //   // flexDirection: "column",
-        //   margin: "0 auto",
-        //   // alignItems: "center",
-        //   // justifyContent: "center",
-        //   padding: "16px",
-        //   backgroundColor: "#f5f5f5", // Optional: Add background color for visibility
-        // }}
-      >
-        <Box>
-          <Typography
-            letterSpacing={3}
-            fontSize={50}
-            fontWeight={600}
-            // color="#fff"
-            // variant="h1"
+      <Container sx={{ p: 4 }} display="flex" disableGutters={false}>
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "white",
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // Shadow settings
+            p: 2, // Padding
+            mb: 2,
+            borderRadius: 2, // Border radius
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 2,
+            }}
           >
-            Create your cv
-          </Typography>
-          <Typography fontSize={40} letterSpacing={3}>
+            <Typography
+              color="#ff007b"
+              // letterSpacing={3}
+              fontSize={50}
+              fontWeight={500}
+            >
+              Create your cv
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                // flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "space-between",
+                gap: 3,
+              }}
+            >
+              <Button
+                onClick={() => navigate("/dashboard/preview")}
+                variant="contained"
+                sx={{
+                  fontSize: 20,
+                  bgcolor: "#ff007b",
+                  "&:hover": {
+                    bgcolor: "white", // Background color on hover
+                    color: "#ff007b",
+                  },
+                }}
+                endIcon={
+                  <VisibilityIcon
+                    sx={{
+                      fontSize: 30,
+                      color: "white",
+                      "&:hover": {
+                        color: "#ff007b",
+                      },
+                    }}
+                  />
+                }
+              >
+                Preview
+              </Button>
+              <Button
+                onClick={() => navigate("/dashboard/createCv")}
+                variant="contained"
+                sx={{
+                  fontSize: 20,
+                  bgcolor: "#ff007b",
+                  "&:hover": {
+                    bgcolor: "white", // Background color on hover
+                    color: "#ff007b",
+                  },
+                }}
+                endIcon={
+                  <FileDownloadIcon
+                    sx={{
+                      fontSize: 25,
+                      color: "white",
+                      "&:hover": {
+                        color: "#ff007b",
+                      },
+                    }}
+                  />
+                }
+              >
+                Download
+              </Button>
+            </Box>
+          </Box>
+          {/* <Typography fontSize={40} letterSpacing={3}>
             Go through the steps to acomplish a proffessional Cv,
             <br /> Your patience and your details are matter to recruiters,
             <br />
             so take the time to fill out the details
-          </Typography>
+          </Typography> */}
         </Box>
-        <Box
-          sx={{ display: "flex", flexDirection: "row", margin: 0, gap: "1rem" }}
-        >
-          <Box>
-            {sections.map((section) => (
-              <OneSection key={section.id} section={section} />
-            ))}
-          </Box>
-          <Box>
-            <StudentPreview />
-          </Box>
+        <Box>
+          {sections.map((section) => (
+            <OneSection key={section.id} section={section} />
+          ))}
         </Box>
       </Container>
     </UserProvider>

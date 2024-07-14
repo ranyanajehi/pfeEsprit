@@ -9,6 +9,8 @@ import {
   IconButton,
   Autocomplete,
 } from "@mui/material";
+import ConfirmationDialog from "../../mini-components/modal.jsx";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { useUser } from "../../../context/cvGeneratorContext.jsx";
@@ -22,11 +24,14 @@ const techStackOptions = {
 };
 
 const Projects = () => {
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
   const { user, updateUserRecord, data } = useUser();
   const [projects, setProjects] = useState([
     {
       name: "",
       githubLink: "",
+      description: "",
       techStack: {
         languages: [],
         frontend: [],
@@ -67,13 +72,30 @@ const Projects = () => {
     values[index].techStack[category] = value;
     setProjects(values);
   };
+  // ************************************
+  const handleConfirm = () => {
+    console.log("Confirmed!");
+    // Place your confirmation logic here
+    handleUpdate();
+    setDialogOpen(false);
+  };
 
+  const handleCancel = () => {
+    setDialogOpen(false);
+  };
+
+  const openDialog = () => {
+    setDialogOpen(true);
+  };
+
+  // **************************************
   const handleAddProject = () => {
     setProjects([
       ...projects,
       {
         name: "",
         githubLink: "",
+        description: "",
         techStack: {
           languages: [],
           frontend: [],
@@ -117,6 +139,21 @@ const Projects = () => {
             sx={{
               "& .MuiInputLabel-root": { color: "gray" },
               "& .MuiInputLabel-root.Mui-focused": { color: "#ff007b" },
+            }}
+          />
+          <TextField
+            label="Describe your role in the projects and features"
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            multiline
+            rows={4}
+            name="description"
+            value={project.description}
+            onChange={(e) => handleChange(index, e)}
+            sx={{
+              "& .MuiInputLabel-root": { color: "gray" }, // Unfocused label color
+              "& .MuiInputLabel-root.Mui-focused": { color: "#ff007b" }, // Focused label color
             }}
           />
           <TextField
@@ -210,12 +247,26 @@ const Projects = () => {
         </Button>
         <Button
           variant="contained"
-          sx={{ bgcolor: "#ff007b" }}
-          onClick={handleUpdate}
+          sx={{
+            fontSize: 20,
+            bgcolor: "#ff007b",
+            "&:hover": {
+              bgcolor: "white", // Background color on hover
+              color: "#ff007b",
+            },
+          }}
+          onClick={openDialog}
         >
           Update Projects
         </Button>
       </Box>
+      <ConfirmationDialog
+        open={isDialogOpen}
+        title="Update Projects"
+        content="Are you sure you want to update projects?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </Container>
   );
 };

@@ -21,14 +21,18 @@ import useForm from "../../../helpers/useForm.jsx";
 import validate from "../../../helpers/validate.jsx";
 import axios from "axios";
 import { useUser } from "../../../context/cvGeneratorContext.jsx";
+import ConfirmationDialog from "../../mini-components/modal.jsx";
 
 const WorkHistory = () => {
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
   const { user, getCurrentUser, updateUserRecord } = useUser();
   const initialState = {
     positions: [
       {
         _id: 1,
         position: "",
+        description: "",
         company: "",
         startDate: "",
         endDate: "",
@@ -53,6 +57,7 @@ const WorkHistory = () => {
           position: "",
           company: "",
           startDate: "",
+          description: "",
           endDate: "",
           isCurrent: false,
           employmentType: "Full Time",
@@ -84,7 +89,23 @@ const WorkHistory = () => {
   useEffect(() => {
     getAllUserRecords();
   }, []);
+  // ************************************
+  const handleConfirm = () => {
+    console.log("Confirmed!");
+    // Place your confirmation logic here
+    handleSubmit();
+    setDialogOpen(false);
+  };
 
+  const handleCancel = () => {
+    setDialogOpen(false);
+  };
+
+  const openDialog = () => {
+    setDialogOpen(true);
+  };
+
+  // **************************************
   const handleSubmit = () => {
     const errors = validate(formData, true);
     setErrors(errors);
@@ -150,6 +171,23 @@ const WorkHistory = () => {
                   onChange={(e) => changeHandler(e, position._id)}
                   error={!!errors[`positions.${posIndex}.company`]}
                   helperText={errors[`positions.${posIndex}.company`]}
+                />
+                <TextField
+                  label="Describe your role and your mission"
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  multiline
+                  rows={4}
+                  name="description"
+                  value={position.description}
+                  onChange={(e) => changeHandler(e, position._id)}
+                  error={!!errors[`positions.${posIndex}.description`]}
+                  helperText={errors[`positions.${posIndex}.description`]}
+                  sx={{
+                    "& .MuiInputLabel-root": { color: "gray" }, // Unfocused label color
+                    "& .MuiInputLabel-root.Mui-focused": { color: "#ff007b" }, // Focused label color
+                  }}
                 />
                 <Box
                   sx={{
@@ -262,12 +300,27 @@ const WorkHistory = () => {
         </Button>
         <Button
           variant="contained"
-          sx={{ ml: 2, bgcolor: "#ff007b" }}
-          onClick={handleSubmit}
+          sx={{
+            ml: 2,
+            fontSize: 20,
+            bgcolor: "#ff007b",
+            "&:hover": {
+              bgcolor: "white", // Background color on hover
+              color: "#ff007b",
+            },
+          }}
+          onClick={openDialog}
         >
           Save Work History
         </Button>
       </Box>
+      <ConfirmationDialog
+        open={isDialogOpen}
+        title="Update your work history"
+        content="Are you sure you want to update work history?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </Container>
   );
 };
