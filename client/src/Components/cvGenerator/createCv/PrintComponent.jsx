@@ -1,234 +1,293 @@
-import React, { forwardRef } from "react";
-import "./CreateCv.css";
+import React from "react";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  Link,
+  Svg,
+  Path,
+} from "@react-pdf/renderer";
+import emailIcon from "../../../images/icons/envelope-solid.svg";
+import phoneIcon from "../../../images/icons/phone-solid.svg";
+import githubIcon from "../../../images/icons/github.svg";
+import linkedinIcon from "../../../images/icons/linkedin.svg";
 
-const PrintComponent = forwardRef(({ data, binaryImg }, ref) => {
+// Define your styles
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: "column",
+    backgroundColor: "#ffffff",
+    padding: "30px",
+    // width: "100%",
+  },
+  section: {
+    marginBottom: "20px",
+  },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottom: "1px solid #eee",
+    paddingBottom: "10px",
+    marginBottom: "10px",
+  },
+  headerImg: {
+    borderRadius: "50%",
+    width: 100,
+    height: 100,
+    objectFit: "cover",
+    marginRight: 20,
+  },
+  info: {
+    flex: 1,
+  },
+  h1: {
+    fontSize: "20px",
+    fontWeight: "bold",
+    color: "#ff007b",
+  },
+  h2: {
+    fontSize: "15px",
+    fontWeight: "normal",
+    color: "#777",
+  },
+  contacts: {
+    marginTop: "10px",
+    fontSize: "11px",
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+  },
+  stackContain: {
+    flexDirection: "column",
+    // flexWrap: "wrap",
+    alignItems: "center",
+  },
+  contactItem: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: "10px",
+    color: "#333",
+  },
+  para: {
+    fontSize: "15px",
+    color: "#333",
+  },
+  contactIcon: {
+    width: "16px",
+    height: "16px",
+    marginRight: 5,
+  },
+  link: {
+    color: "#ff007b",
+    textDecoration: "none",
+  },
+  sectionH3: {
+    fontSize: "22px",
+    width: "140px",
+    marginBottom: "10px",
+    borderBottom: "2px solid #ff007b",
+    color: "#ff007b",
+  },
+  item: {
+    marginBottom: "10px",
+  },
+  itemH4: {
+    fontSize: "18px",
+    fontWeight: "bold",
+    color: "#333",
+  },
+  itemP: {
+    marginVertical: "2px",
+    fontSize: "16px",
+    color: "#555",
+  },
+  skill: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    fontSize: "18px",
+    paddingVertical: "7px",
+  },
+  skillSpan: {
+    fontWeight: "bold",
+    fontSize: "14px",
+  },
+});
+const githubSvg = (
+  <Svg
+    style={styles.contactIcon}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 496 512"
+  >
+    <Path
+      fill="#ff007b"
+      d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"
+    />
+  </Svg>
+);
+const emailSvg = (
+  <Svg
+    style={styles.contactIcon}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+  >
+    <Path
+      fill="#ff007b"
+      d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"
+    />
+  </Svg>
+);
+const linkedinSvg = (
+  <Svg
+    style={styles.contactIcon}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 448 512"
+  >
+    <Path
+      fill="#ff007b"
+      d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"
+    />
+  </Svg>
+);
+const phoneSvg = (
+  <Svg
+    style={styles.contactIcon}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+  >
+    <Path
+      fill="#ff007b"
+      d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"
+    />
+  </Svg>
+);
+const PdfDocument = ({ data, binaryImg }) => {
   const { user, education, workHistory, proj, skills } = data;
 
-  const styles = {
-    resume: {
-      fontFamily: "'Montserrat', sans-serif",
-      color: "#333",
-      maxWidth: "900px",
-      margin: "2rem auto",
-      background: "#fff",
-      boxShadow: "0 0 20px rgba(0, 0, 0, 0.1)",
-      padding: "2rem",
-      borderRadius: "8px",
-    },
-    header: {
-      display: "flex",
-      alignItems: "center",
-      borderBottom: "1px solid #eee",
-      paddingBottom: "1rem",
-      marginBottom: "1rem",
-    },
-    headerImg: {
-      borderRadius: "50%",
-      width: "150px",
-      height: "150px",
-      objectFit: "cover",
-      marginRight: "2rem",
-    },
-    info: {
-      flex: 1,
-    },
-    h1: {
-      margin: 0,
-      fontSize: "2.5rem",
-      fontWeight: 700,
-      color: "#0073e6",
-    },
-    h2: {
-      margin: 0,
-      fontSize: "1.5rem",
-      fontWeight: 400,
-      color: "#777",
-    },
-    contacts: {
-      marginTop: "1rem",
-    },
-    contactSpan: {
-      display: "inline-block",
-      marginRight: "1rem",
-      color: "#333",
-    },
-    section: {
-      marginBottom: "2rem",
-    },
-    sectionH3: {
-      fontSize: "1.8rem",
-      marginBottom: "1rem",
-      borderBottom: "2px solid #0073e6",
-      display: "inline-block",
-      color: "#0073e6",
-    },
-    item: {
-      marginBottom: "1rem",
-    },
-    itemH4: {
-      margin: 0,
-      fontSize: "1.2rem",
-      fontWeight: 700,
-      color: "#333",
-    },
-    itemP: {
-      margin: "0.5rem 0 0 0",
-      color: "#555",
-    },
-    skill: {
-      display: "flex",
-      justifyContent: "space-between",
-      padding: "0.5rem 0",
-    },
-    skillSpan: {
-      fontWeight: 700,
-    },
-  };
-
-  const emailIcon = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0073e6" class="bi bi-envelope-fill" viewBox="0 0 16 16">
-      <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.793L0 4.697zM6.761 8.83l-6.761 4.432A2 2 0 0 0 2 14h12a2 2 0 0 0 1.999-1.738l-6.761-4.432L8 9.586l-1.239-.756zM16 4.697l-5.803 3.311L16 11.801V4.697z"/>
-    </svg>`;
-  const phoneIcon = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0073e6" class="bi bi-telephone-fill" viewBox="0 0 16 16">
-      <path d="M3.654 1.328a.678.678 0 0 1 1.017.177l2.123 3.18a.678.678 0 0 1-.161.927l-1.513 1.012a11.42 11.42 0 0 0 5.184 5.184l1.012-1.513a.678.678 0 0 1 .927-.161l3.18 2.123a.678.678 0 0 1 .177 1.017l-2.197 2.197a1.745 1.745 0 0 1-1.998.355C8.885 15.477 4.522 11.114 1.146 3.82a1.745 1.745 0 0 1 .355-1.998L3.654 1.328z"/>
-    </svg>`;
-  const githubIcon = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0073e6" class="bi bi-github" viewBox="0 0 16 16">
-      <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.09.58 1.24.82.72 1.2 1.87.85 2.33.65.07-.52.28-.85.51-1.05-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.13 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.11.16 1.93.08 2.13.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.64 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.003 8.003 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-    </svg>`;
-  const linkedinIcon = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#0073e6" class="bi bi-linkedin" viewBox="0 0 16 16">
-      <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.487 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.513 16 0 15.487 0 14.854V1.146zM4.943 6.937H3.071V13h1.872V6.937zM4.007 5.797c.606 0 .98-.412.98-.93-.011-.527-.373-.93-.966-.93-.594 0-.98.403-.98.93 0 .518.373.93.953.93h.013zM6.912 6.937H5.04V13h1.872V9.359c0-.976.347-1.642 1.212-1.642.66 0 1.053.444 1.228.874.063.154.079.368.079.583V13h1.872V9.31c0-2.233-1.188-3.271-2.772-3.271-1.278 0-1.844.7-2.159 1.193h.013V6.937z"/>
-    </svg>`;
-
   return (
-    <div ref={ref} id="resume" style={styles.resume}>
-      <div className="header" style={styles.header}>
-        <img
-          src={binaryImg}
-          alt={`${user.firstName} ${user.lastName}`}
-          style={styles.headerImg}
-        />
-        <div className="info" style={styles.info}>
-          <h1 style={styles.h1}>
-            {user.firstName} {user.lastName}
-          </h1>
-          <h2 style={styles.h2}>{user.role}</h2>
-          <div className="contacts" style={styles.contacts}>
-            <span
-              style={styles.contactSpan}
-              dangerouslySetInnerHTML={{ __html: emailIcon }}
-            ></span>
-            <span style={styles.contactSpan}>{user.email}</span>
-            <span
-              style={styles.contactSpan}
-              dangerouslySetInnerHTML={{ __html: phoneIcon }}
-            ></span>
-            <span style={styles.contactSpan}>{user.phone}</span>
-            <span
-              style={styles.contactSpan}
-              dangerouslySetInnerHTML={{ __html: githubIcon }}
-            ></span>
-            <span style={styles.contactSpan}>
-              <a href={user.github}>{user.github}</a>
-            </span>
-            <span
-              style={styles.contactSpan}
-              dangerouslySetInnerHTML={{ __html: linkedinIcon }}
-            ></span>
-            <span style={styles.contactSpan}>
-              <a href={user.linkedin}>{user.linkedin}</a>
-            </span>
-          </div>
-          <p>{user.about}</p>
-        </div>
-      </div>
-
-      <div className="section" style={styles.section}>
-        <h3 style={styles.sectionH3}>Education</h3>
-        {education.map((edu, index) => (
-          <div className="item" style={styles.item} key={index}>
-            <h4 style={styles.itemH4}>
-              {edu.degree} - {edu.college}
-            </h4>
-            <p style={styles.itemP}>
-              {edu.startDate} - {edu.endDate}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      <div className="section" style={styles.section}>
-        <h3 style={styles.sectionH3}>Work History</h3>
-        {workHistory.map((work, index) => (
-          <div className="item" style={styles.item} key={index}>
-            <h4 style={styles.itemH4}>
-              {work.position} at {work.company}
-            </h4>
-            <p style={styles.itemP}>
-              {work.startDate} - {work.endDate}
-            </p>
-            <p style={styles.itemP}>{work.description}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="section" style={styles.section}>
-        <h3 style={styles.sectionH3}>Projects</h3>
-        {proj.map((project, index) => (
-          <div className="item" style={styles.item} key={index}>
-            <h4 style={styles.itemH4}>{project.name}</h4>
-            <p style={styles.itemP}>
-              <a href={project.githubLink}>{project.githubLink}</a>
-            </p>
-            <p style={styles.itemP}>{project.description}</p>
-            <p style={styles.itemP}>
-              <strong>Tech Stack:</strong>
-            </p>
-            <ul>
-              {Object.entries(project.techStack).map(([key, value], index) => (
-                <li key={index}>
-                  <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
-                  {value.join(", ")}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      <div className="section skills" style={styles.section}>
-        <h3 style={styles.sectionH3}>Skills</h3>
-        <div>
-          <h4 style={styles.itemH4}>Technical Skills</h4>
-          {skills.technicalSkills.map((skill, index) => (
-            <div className="skill" style={styles.skill} key={index}>
-              <span style={styles.skillSpan}>{skill.skill}</span>
-              <span style={styles.skillSpan}>{skill.level}</span>
-            </div>
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={styles.header}>
+          <Image src={binaryImg} style={styles.headerImg} />
+          <View style={styles.info}>
+            <Text style={styles.h1}>
+              {user.firstName} {user.lastName}
+            </Text>
+            <Text style={styles.h2}>{user.role}</Text>
+            <View style={styles.contacts}>
+              <View style={styles.contactItem}>
+                {emailSvg}
+                <Text>{user.email}</Text>
+              </View>
+              <View style={styles.contactItem}>
+                {phoneSvg}
+                <Text>{user.phone}</Text>
+              </View>
+              <Link src={user.github} style={styles.link}>
+                <View style={styles.contactItem}>
+                  {githubSvg}
+                  <Text>{user.github}</Text>
+                </View>
+              </Link>
+              <Link src={user.linkedin} style={styles.link}>
+                <View style={styles.contactItem}>
+                  {linkedinSvg}
+                  <Text>{user.linkedin}</Text>
+                </View>
+              </Link>
+            </View>
+            <Text style={styles.para}>{user.about}</Text>
+          </View>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionH3}>Education</Text>
+          {education.map((edu, index) => (
+            <View style={styles.item} key={index}>
+              <Text style={styles.itemH4}>
+                {edu.degree} - {edu.college}
+              </Text>
+              <Text style={styles.itemP}>
+                {edu.startDate} - {edu.endDate}
+              </Text>
+            </View>
           ))}
-        </div>
-        <div>
-          <h4 style={styles.itemH4}>Soft Skills</h4>
-          {skills.softSkills.map((skill, index) => (
-            <div className="skill" style={styles.skill} key={index}>
-              <span style={styles.skillSpan}>{skill.skill}</span>
-            </div>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionH3}>Work History</Text>
+          {workHistory.map((work, index) => (
+            <View style={styles.item} key={index}>
+              <Text style={styles.itemH4}>
+                {work.position} at {work.company}
+              </Text>
+              <Text style={styles.itemP}>
+                {work.startDate} - {work.endDate}
+              </Text>
+              <Text style={styles.itemP}>{work.description}</Text>
+            </View>
           ))}
-        </div>
-        <div>
-          <h4 style={styles.itemH4}>Languages</h4>
-          {skills.languages.map((language, index) => (
-            <div className="skill" style={styles.skill} key={index}>
-              <span style={styles.skillSpan}>{language.language}</span>
-              <span style={styles.skillSpan}>{language.proficiency}</span>
-            </div>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionH3}>Projects</Text>
+          {proj.map((project, index) => (
+            <View style={styles.item} key={index}>
+              <Text style={styles.itemH4}>{project.name}</Text>
+              <Link src={project.githubLink} style={styles.link}>
+                <Text style={styles.itemP}>{project.githubLink}</Text>
+              </Link>
+              <Text style={styles.itemP}>{project.description}</Text>
+              <Text style={styles.itemP}>
+                <Text style={{ fontWeight: "bold" }}>Tech Stack:</Text>{" "}
+                <View style={styles.stackContain}>
+                  {Object.entries(project.techStack).map(
+                    ([key, value], idx) => (
+                      <Text key={idx}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
+                        {value.join(", ")}
+                      </Text>
+                    )
+                  )}
+                </View>
+              </Text>
+            </View>
           ))}
-        </div>
-      </div>
-    </div>
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionH3}>Skills</Text>
+          <View>
+            <Text style={styles.itemH4}>Technical Skills</Text>
+            {skills.technicalSkills.map((skill, index) => (
+              <View style={styles.skill} key={index}>
+                <Text style={styles.skillSpan}>{skill.skill}</Text>
+                <Text style={styles.skillSpan}>{skill.level}</Text>
+              </View>
+            ))}
+          </View>
+          <View>
+            <Text style={styles.itemH4}>Soft Skills</Text>
+            {skills.softSkills.map((skill, index) => (
+              <View style={styles.skill} key={index}>
+                <Text style={styles.skillSpan}>{skill.skill}</Text>
+              </View>
+            ))}
+          </View>
+          <View>
+            <Text style={styles.itemH4}>Languages</Text>
+            {skills.languages.map((language, index) => (
+              <View style={styles.skill} key={index}>
+                <Text style={styles.skillSpan}>{language.language}</Text>
+                <Text style={styles.skillSpan}>{language.proficiency}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      </Page>
+    </Document>
   );
-});
+};
 
-export default PrintComponent;
+export default PdfDocument;

@@ -40,6 +40,7 @@ export const isStudentAuthenticated = catchAsyncErrors(
         model: "User",
       },
     });
+    // .exec("rooms");
     if (req.user.role !== "Student") {
       return next(
         new ErrorHandler(

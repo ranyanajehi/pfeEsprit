@@ -7,6 +7,9 @@ const WorkHistorySchema = new Schema({
   company: {
     type: String,
   },
+  description: {
+    type: String,
+  },
   position: {
     type: String,
   },

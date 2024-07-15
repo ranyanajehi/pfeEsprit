@@ -1,17 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import PrintComponent from "./PrintComponent.jsx";
+import PdfDocument from "./PrintComponent.jsx";
 import Resume from "./CV.jsx";
 import { Container, CircularProgress, Button, Box } from "@mui/material";
 import ReactToPrint from "react-to-print";
-import htmlToPdfmake from "html-to-pdfmake";
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
 import axios from "axios";
-import juice from "juice";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import "./CreateCv.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 function CreateCv() {
   const [data, setData] = useState(null);
@@ -62,37 +57,9 @@ function CreateCv() {
         });
       });
   };
-  const handleDownloadPDF = async () => {
-    const printElement = printRef.current;
-    const html = printElement.innerHTML;
 
-    // Add FontAwesome CSS to the HTML
-    const fontAwesomeCss = `
-      <style>
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
-      </style>
-    `;
-    const htmlWithFontAwesome = fontAwesomeCss + html;
-
-    // Inline CSS using juice
-    const inlinedHtml = juice(htmlWithFontAwesome);
-
-    const pdfMakeContent = htmlToPdfmake(inlinedHtml);
-    const documentDefinition = { content: pdfMakeContent };
-
-    // Convert images to Base64 and update the document definition
-
-    pdfMake.createPdf(documentDefinition).download("cv.pdf");
-  };
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        p: 3,
-      }}
-    >
+    <Container maxWidth={false} sx={{ p: 3 }}>
       {data ? (
         <>
           <Box
@@ -111,21 +78,46 @@ function CreateCv() {
               )}
               content={() => printRef.current}
             />
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleDownloadPDF}
+            <PDFDownloadLink
+              document={<PdfDocument data={data} binaryImg={binaryImg} />}
+              fileName="cv.pdf"
             >
-              Download PDF
-            </Button>
+              {({ blob, url, loading, error }) =>
+                loading ? (
+                  "Loading document..."
+                ) : (
+                  <Button variant="contained" color="secondary">
+                    Download PDF
+                  </Button>
+                )
+              }
+            </PDFDownloadLink>
           </Box>
-          <Resume data={data} />
-          <div style={{ display: "none" }}>
-            <PrintComponent ref={printRef} binaryImg={binaryImg} data={data} />
-          </div>
+          {/* <Resume data={data} binaryImg={binaryImg} />w */}
+          <Box
+            sx={{
+              border: "1px solid #ccc",
+              marginTop: 2,
+              width: "100%",
+              height: "80vh",
+            }}
+          >
+            <PDFViewer width="100%" height="100%">
+              <PdfDocument data={data} binaryImg={binaryImg} />
+            </PDFViewer>
+          </Box>
         </>
       ) : (
-        <CircularProgress />
+        <Box
+          sx={{
+            height: "70vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
       )}
     </Container>
   );
