@@ -1,7 +1,7 @@
-import React, { useContext, useState, useCallback } from "react";
+import React, { useContext, useState,  } from "react";
 import "./Login.css";
 
-import { useBeforeUnload, Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Context } from "../../main";
@@ -40,7 +40,7 @@ const Login = () => {
           navigateTo("/");
           setEmail("");
           setPassword("");
-          setConfirmPassword("");
+        
         });
     } catch (error) {
       toast.error(error.response.data.message);

@@ -54,6 +54,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     enum: ["Admin", "Student"],
   },
+  isLoggedIn: { 
+    type: Boolean, default: false
+   },
   status: {
     type: String,
     enum: ["Pending", "Accepted", "Rejected"],
@@ -64,6 +67,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
   rooms: [{ type: ObjectId, ref: "Room" }],
 });
 userSchema.pre("save", async function (next) {

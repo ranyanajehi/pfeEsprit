@@ -2,7 +2,6 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler, {
   errorMiddleware,
 } from "../middlewares/errorMiddleware.js";
-import { upload } from "../middlewares/multer.js";
 import { generateToken } from "../utils/jwtToken.js";
 import { User } from "../models/userSchema.js";
 
@@ -42,6 +41,19 @@ export const studentRegister = catchAsyncErrors(async (req, res, next) => {
   res.status(201).json({
     success: true,
     message: "Client enregistré",
+    user,
+  });
+});
+
+
+
+
+// controllers/userController.js
+
+export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
+  const user = req.user;
+  res.status(200).json({
+    success: true,
     user,
   });
 });
@@ -129,6 +141,29 @@ export const updateStudent = catchAsyncErrors(async (req, res, next) => {
     user,
   });
 });
+// Fonction de connexion pour les administrateurs
+export const adminLogin = catchAsyncErrors(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new ErrorHandler("Veuillez fournir tous les détails.", 400));
+  }
+
+  const user = await User.findOne({ email }).select("+password");
+  if (!user) {
+    return next(new ErrorHandler("Email ou mot de passe invalide.", 400));
+  }
+
+  const isPasswordMatch = await user.comparePassword(password);
+  if (!isPasswordMatch) {
+    return next(new ErrorHandler("Email ou mot de passe invalide!", 400));
+  }
+
+  if (user.role !== "Admin") {
+    return next(new ErrorHandler("Seuls les administrateurs peuvent se connecter ici!", 403));
+  }
+
+  generateToken(user, "L'administrateur a été connecté avec succès!", 201, res);
+});
 
 export const login = catchAsyncErrors(async (req, res, next) => {
   const { email, password, role } = req.body;
@@ -149,8 +184,24 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   if (role !== user.role) {
     return next(new ErrorHandler("Role inconuue!", 400));
   }
-  generateToken(user, "Admin a été connecté avec succès.!", 201, res);
+
+  user.isLoggedIn = true; // Set isLoggedIn to true
+  await user.save();
+
+  generateToken(user, "User has been logged in successfully!", 201, res);
 });
+
+
+export const getLoggedInStudents = catchAsyncErrors(async (req, res, next) => {
+  const loggedInStudents = await User.find({ role: "Student", isLoggedIn: true });
+  res.status(200).json({
+    success: true,
+    count: loggedInStudents.length,
+    data: loggedInStudents,
+  });
+});
+
+
 
 export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
   const { firstName, lastName, email, phone, password, genre } = req.body;
