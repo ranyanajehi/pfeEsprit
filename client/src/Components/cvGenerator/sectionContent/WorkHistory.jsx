@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { Context } from "../../../main.jsx";
+
 import {
   Container,
   TextField,
@@ -25,6 +27,7 @@ import ConfirmationDialog from "../../mini-components/modal.jsx";
 
 const WorkHistory = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const { token } = useContext(Context);
 
   const { user, getCurrentUser, updateUserRecord } = useUser();
   const initialState = {
@@ -77,7 +80,7 @@ const WorkHistory = () => {
   const getAllUserRecords = async () => {
     try {
       const response = await axios.get("http://localhost:4000/getSections", {
-        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` },
       });
       setFormData({ positions: response.data.workHistory });
     } catch (error) {

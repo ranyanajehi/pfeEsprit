@@ -7,21 +7,26 @@ import { GoCheckCircleFill } from "react-icons/go";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { sendEmail } from "../../emailjs";
 import { useRef } from "react";
+import Cookies from "js-cookie";
 
 const Dashboard = () => {
-  const { isAuthenticated, user } = useContext(Context);
+  const { token, setToken, user } = useContext(Context);
   const [appointments, setAppointments] = useState([]);
   const [studentCount, setStudentCount] = useState(0);
   const [isGraduationsHovered, setIsGraduationsHovered] = useState(false);
   const [isEvennementsHovered, setIsEvennementsHovered] = useState(false);
+  // const [cookie, takeCookie] = useState();
   const form = useRef(null);
+
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
         const { data } = await axios.get(
           "http://127.0.0.1:4000/api/v1/appointment/getAllAppointment",
           {
-            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            },
           }
         );
         setAppointments(data.allAppointment);
@@ -35,7 +40,9 @@ const Dashboard = () => {
         const { data } = await axios.get(
           "http://127.0.0.1:4000/api/v1/user/count",
           {
-            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
         setStudentCount(data.studentCount);
@@ -53,18 +60,22 @@ const Dashboard = () => {
       const { data } = await axios.put(
         `http://127.0.0.1:4000/api/v1/appointment/update/${appointmentId}`,
         { status },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-     try {
-       form.current.querySelector('input[name="to_name"]').value =
-         "Amine Amdouni";
-       form.current.querySelector('input[name="to_email"]').value =
-         "amineamdouni24@gmail.com";
+      try {
+        form.current.querySelector('input[name="to_name"]').value =
+          "Amine Amdouni";
+        form.current.querySelector('input[name="to_email"]').value =
+          "amineamdouni24@gmail.com";
 
-       sendEmail(form.current);
-     } catch (error) {
-       console.log(error);
-     }
+        sendEmail(form.current);
+      } catch (error) {
+        console.log(error);
+      }
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
           appointment._id === appointmentId
@@ -78,7 +89,7 @@ const Dashboard = () => {
     }
   };
 
-  if (!isAuthenticated) {
+  if (!token) {
     return <Navigate to="/login" />;
   }
 
@@ -155,11 +166,11 @@ const Dashboard = () => {
       </div>
       <div className="banner">
         <h5>Rendez-Vous</h5>
-        <form ref={form} >
+        <form ref={form}>
           <input type="hidden" name="to_name" />
           <input type="hidden" name="to_email" />
         </form>
-      
+
         <table>
           <thead>
             <tr>

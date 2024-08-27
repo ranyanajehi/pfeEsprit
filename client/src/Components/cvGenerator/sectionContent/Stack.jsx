@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Container,
   TextField,
@@ -8,6 +8,8 @@ import {
   MenuItem,
   IconButton,
 } from "@mui/material";
+import { Context } from "../../../main.jsx";
+
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -19,6 +21,7 @@ const proficiencyLevels = ["Basic", "Conversational", "Fluent", "Native"];
 
 const Skills = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const { token } = useContext(Context);
 
   const { user, getCurrentUser, updateUserRecord } = useUser();
   const [technicalSkills, setTechnicalSkills] = useState([
@@ -121,7 +124,9 @@ const Skills = () => {
   const getAllUserRecords = async () => {
     try {
       const response = await axios.get("http://localhost:4000/getSections", {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       console.log("====================================");
       console.log(response.data);

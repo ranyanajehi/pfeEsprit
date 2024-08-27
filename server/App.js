@@ -13,22 +13,17 @@ import {
   updateSectionRecords,
   getAllUserSections,
 } from "./controllers/cvGenerator.js";
-import {
-  isStudentAuthenticated,
-  isAdminAuthenticated,
-} from "./middlewares/auth.js";
+import { isStudentAuthenticated } from "./middlewares/auth.js";
 
 import eventRouter from "./routes/eventRouter.js";
 import graduationRouter from "./routes/graduationRouter.js";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
-import { upload } from "./middlewares/multer.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
-app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
 config({ path: "./config/config.env" });
 console.log("config", process.env.FRONTEND_URL);
@@ -40,8 +35,6 @@ app.use(
     preflightContinue: true,
   })
 );
-
-// app.use(cors());
 app.use(
   morgan(function (tokens, req, res) {
     return [

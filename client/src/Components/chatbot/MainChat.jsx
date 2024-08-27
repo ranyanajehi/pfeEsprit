@@ -105,7 +105,9 @@ const MainChat = () => {
       const data = await axios.get(
         "http://localhost:4000/api/v1/user/student/me",
         {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       console.log("data.user", data.data.user.rooms);
@@ -231,10 +233,16 @@ const MainChat = () => {
       formObject.createdAt = new Date();
       formObject.sender = user;
       chatSocket.emit("chat_message", formObject);
+
       const sendMessage = await axios.post(
         "http://localhost:4000/api/v1/chat",
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       console.log("message send", sendMessage.data);
       getAllMessagesForOneRooom();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import {
   Container,
@@ -9,6 +9,8 @@ import {
   IconButton,
   Autocomplete,
 } from "@mui/material";
+import { Context } from "../../../main.jsx";
+
 import ConfirmationDialog from "../../mini-components/modal.jsx";
 
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -25,6 +27,7 @@ const techStackOptions = {
 
 const Projects = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const { token } = useContext(Context);
 
   const { user, updateUserRecord, data } = useUser();
   const [projects, setProjects] = useState([
@@ -46,7 +49,9 @@ const Projects = () => {
   const getAllUserRecords = async () => {
     try {
       const response = await axios.get("http://localhost:4000/getSections", {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       console.log("====================================");
       console.log(response.data);

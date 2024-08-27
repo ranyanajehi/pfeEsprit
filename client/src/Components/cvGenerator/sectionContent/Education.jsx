@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Container,
   TextField,
@@ -10,12 +10,14 @@ import {
   Checkbox,
 } from "@mui/material";
 import ConfirmationDialog from "../../mini-components/modal.jsx";
+import { Context } from "../../../main.jsx";
 
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { useUser } from "../../../context/cvGeneratorContext.jsx";
 const Education = () => {
+  const { token } = useContext(Context);
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   const [educations, setEducations] = useState([
@@ -43,7 +45,9 @@ const Education = () => {
   const getAllUserRecords = async () => {
     try {
       const response = await axios.get("http://localhost:4000/getSections", {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       console.log("====================================");
       console.log(response.data);

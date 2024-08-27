@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import PdfDocument from "./PrintComponent.jsx";
 import Resume from "./CV.jsx";
+import { Context } from "../../../main.jsx";
 import { Container, CircularProgress, Button, Box } from "@mui/material";
 import ReactToPrint from "react-to-print";
 import axios from "axios";
@@ -13,12 +14,14 @@ function CreateCv() {
   const [loading, setLoading] = useState(true);
   const [binaryImg, setBinaryImg] = useState("");
   const printRef = useRef();
-
+  const { token } = useContext(Context);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:4000/getSections", {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
         setData(response.data);
         if (

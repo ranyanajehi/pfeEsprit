@@ -7,7 +7,10 @@ import jwt from "jsonwebtoken";
 
 // Middleware to authenticate dashboard users
 export const isAdminAuthenticated = catchAsyncErrors(async (req, res, next) => {
-  const token = req.cookies.adminToken;
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
+  console.log("req.cookies", Object.keys(req.cookies));
+
   if (!token) {
     return next(new ErrorHandler("Dashboard User is not authenticated!", 400));
   }
@@ -27,7 +30,8 @@ export const isAdminAuthenticated = catchAsyncErrors(async (req, res, next) => {
 // Middleware to authenticate frontend users
 export const isStudentAuthenticated = catchAsyncErrors(
   async (req, res, next) => {
-    const token = req.cookies.studentToken;
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
     console.log(token, "tokennnnnnnnnnnnnnnnnnnnnnnnnnn");
     if (!token) {
       return next(new ErrorHandler("User is not authenticated!", 400));

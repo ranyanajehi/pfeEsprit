@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../preview.css";
@@ -12,9 +12,12 @@ import {
   faCogs,
 } from "@fortawesome/free-solid-svg-icons";
 import { CircularProgress, Box } from "@mui/material";
+import { Context } from "../../../main.jsx";
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 
 const StudentPreview = () => {
+  const { token } = useContext(Context);
+
   const [studentData, setStudentData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +25,9 @@ const StudentPreview = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:4000/getSections", {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
         setStudentData(response.data);
         setLoading(false);

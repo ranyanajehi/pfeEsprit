@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Container,
   TextField,
@@ -9,6 +9,8 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
+import { Context } from "../../../main.jsx";
+
 import { KeyTwoTone, PhotoCamera } from "@mui/icons-material";
 import ConfirmationDialog from "../../mini-components/modal.jsx";
 import axios from "axios";
@@ -16,6 +18,8 @@ import useForm from "../../../helpers/useForm.jsx";
 import validate from "../../../helpers/validate.jsx";
 
 const Information = () => {
+  const { token } = useContext(Context);
+
   const [preview, setPreview] = useState(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [img, setImage] = useState("");
@@ -72,7 +76,9 @@ const Information = () => {
       const { data } = await axios(
         "http://localhost:4000/api/v1/user/student/me",
         {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       console.log("user", data.user);
@@ -133,8 +139,8 @@ const Information = () => {
         "http://localhost:4000/api/v1/user/updateCv",
         form,
         {
-          withCredentials: true,
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         }

@@ -11,21 +11,21 @@ import { AiFillMessage } from "react-icons/ai";
 import { MdAddModerator } from "react-icons/md";
 import { FaBriefcase, FaUserGraduate, FaCalendarAlt } from "react-icons/fa"; // Importing FaCalendarAlt for Events
 
-
 import "./sideBar.css";
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+  const { token, setToken } = useContext(Context);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       await axios.get("http://127.0.0.1:4000/api/v1/user/admin/logout", {
-        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("Logged out successfully.");
-      setIsAuthenticated(false);
+      localStorage.removeItem("token");
+      setToken(null);
       navigate("/login");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -59,8 +59,6 @@ const SideBar = () => {
     setCollapsed(true);
   };
 
-
-
   const gotoEventsPage = () => {
     navigateTo("/events");
     setCollapsed(true);
@@ -69,7 +67,7 @@ const SideBar = () => {
   return (
     <>
       <nav
-        style={!isAuthenticated ? { display: "none" } : { display: "flex" }}
+        style={!token ? { display: "none" } : { display: "flex" }}
         className={`SideBar ${collapsed ? "collapsed" : ""}`}
       >
         <div className="links">
