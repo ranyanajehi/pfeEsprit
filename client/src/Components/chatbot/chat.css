@@ -23,16 +23,6 @@
     overflow-x: hidden;
   } */
 
-/* Container */
-.container_chat {
-  background: linear-gradient(180deg, var(--bg-color), var(--inbox-secondary));
-  /* overflow-x: hidden; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
 /* Inbox Styles */
 .chat_inbox {
   background: var(--bg-color);
@@ -103,14 +93,11 @@
 /* Our Main Content Where Conversations Will Be Listed */
 .main_chat {
   background: var(--bg-color);
-  height: 100%;
-  width: 100%;
 
   flex-basis: 0;
   flex-grow: 3;
   border-top-right-radius: var(--inbox-radius);
   border-bottom-right-radius: var(--inbox-radius);
-  transform: scale(1.035);
 }
 
 .message-wrap {
@@ -186,7 +173,7 @@
 .footer_chat {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 77%;
 
   border-top: 2px solid #c5ced4;
   background: var(--bg-color);
@@ -211,10 +198,10 @@
   font-size: 1.3rem;
 }
 #chat-form input[type="submit"] {
-  color: #fff;
-  width: 17%;
-  background-color: var(--inbox-secondary);
-  font-size: 1.3rem;
+  color: #fff !important;
+  width: 17% !important;
+  background-color: var(--inbox-secondary) !important;
+  font-size: 1.3rem !important;
   border-radius: 4px;
   padding: 1rem;
   margin: 0.3em;

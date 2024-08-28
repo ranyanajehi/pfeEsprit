@@ -57,8 +57,6 @@ const AllSections = () => {
       <Container sx={{ p: 4 }} display="flex" disableGutters={false}>
         <Box
           sx={{
-            width: "100%",
-            height: "100%",
             backgroundColor: "white",
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // Shadow settings
             p: 2, // Padding
