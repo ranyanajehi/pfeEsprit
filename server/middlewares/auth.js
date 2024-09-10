@@ -53,6 +53,11 @@ export const isStudentAuthenticated = catchAsyncErrors(
         )
       );
     }
+    if (["Pending", "Rejected"].includes(req.user.status)) {
+      return next(
+        new ErrorHandler(`You are reject or no yet accepted by the admin`, 403)
+      );
+    }
     next();
   }
 );
