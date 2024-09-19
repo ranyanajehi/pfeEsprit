@@ -39,7 +39,11 @@ router.put(
 
 router.post("/login", login);
 router.post("/admin/addNew", isAdminAuthenticated, addNewAdmin);
-router.get("/student/getStudent", isAdminAuthenticated, getAllStudent);
+router.get(
+  "/student/getStudent/:page/:limit",
+  isAdminAuthenticated,
+  getAllStudent
+);
 router.get("/admin/me", isAdminAuthenticated, getUserDetails);
 router.get("/student/me", isStudentAuthenticated, getUserDetails);
 router.get("/admin/logout", isAdminAuthenticated, logoutAdmin);

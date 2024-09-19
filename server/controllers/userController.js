@@ -186,10 +186,19 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
   });
 });
 export const getAllStudent = catchAsyncErrors(async (req, res, next) => {
-  const student = await User.find({ role: "Student" });
+  const page = parseInt(req.params.page) || 1; // Get page number, default to 1
+  const limit = parseInt(req.params.limit) || 5; // Items per page, default to 10
+  const Allstudent = await User.find({ role: "Student" });
+  const student = await User.find({ role: "Student" })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .exec();
   res.status(200).json({
     success: true,
     student,
+
+    currentPage: page,
+    totalPages: Math.ceil(Allstudent.length / limit),
   });
 });
 

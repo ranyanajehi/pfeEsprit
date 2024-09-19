@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useContext,
+} from "react";
 
 import moment from "moment";
 import axios from "axios";
@@ -29,6 +35,7 @@ const MainChat = () => {
   const messageInputRef = useRef(null);
   const messageEndRef = useRef(null);
   const [chats, setChats] = useState([]);
+  const [loadingPage, setLoadingPage] = useState(false);
   const calculateDuration = (createdAt) => {
     const now = moment();
     const created = moment(createdAt);
@@ -96,9 +103,10 @@ const MainChat = () => {
     };
   }, []);
   const getCurrentUser = async () => {
+    setLoadingPage(true);
     try {
       const data = await axios.get(
-        "http://localhost:4000/api/v1/user/student/me",
+        "http://localhost:4000/api/v1/user/admin/me",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -115,6 +123,7 @@ const MainChat = () => {
           return obj;
         })
       );
+      setLoadingPage(false);
     } catch (error) {
       console.log(error);
     }
@@ -230,7 +239,7 @@ const MainChat = () => {
       chatSocket.emit("chat_message", formObject);
 
       const sendMessage = await axios.post(
-        "http://localhost:4000/api/v1/chat",
+        "http://localhost:4000/api/v1/chat/",
         formData,
         {
           headers: {
@@ -251,7 +260,9 @@ const MainChat = () => {
   };
 
   // const selectedChat = rooms.find((chat) => chat._id === selectedChatId);
-
+  if (loadingPage) {
+    return <div className="loader2"></div>;
+  }
   return (
     <div className="container_chat">
       <div className="chat_inbox">
