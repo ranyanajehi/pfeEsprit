@@ -1,11 +1,30 @@
 import React from "react";
-import { Grid, TextField, Pagination, Box, Typography } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Pagination,
+  Box,
+  Typography,
+  Avatar,
+} from "@mui/material";
 
 const ChatList = ({ rooms, selectChat, user, selectedChatId }) => {
   return (
     <aside className="aside_chat">
-      <Box>
-        <Typography variant="h3" color="white" padding={3} component="h5">
+      <Box
+        padding={1}
+        minHeight={100}
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        flexDirection={"column"}
+      >
+        <Avatar
+          alt="Avatar Preview"
+          src={`http://localhost:4000/uploads/${user.studentAvatar}`}
+          sx={{ width: 70, height: 70 }}
+        />
+        <Typography variant="h6" color="white" component="h5">
           Welcome {user.firstName}
         </Typography>
       </Box>

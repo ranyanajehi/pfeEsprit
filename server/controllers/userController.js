@@ -98,11 +98,12 @@ export const getAcceptedStudents = async (req, res) => {
 };
 // update Student
 export const updateStudent = catchAsyncErrors(async (req, res, next) => {
+  const userId = req.user._id;
   const { firstName, lastName, email, phone, password, genre, levelEnglish } =
     req.body;
 
   // Vérifiez que l'utilisateur existe
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(userId);
   if (!user) {
     return next(new ErrorHandler("Utilisateur non trouvé", 404));
   }
@@ -110,7 +111,6 @@ export const updateStudent = catchAsyncErrors(async (req, res, next) => {
   // Mettre à jour les champs de l'utilisateur
   user.firstName = firstName || user.firstName;
   user.lastName = lastName || user.lastName;
-  user.email = email || user.email;
   user.phone = phone || user.phone;
   user.password = password || user.password;
   user.genre = genre || user.genre;
@@ -312,3 +312,30 @@ export const updateUserCv = catchAsyncErrors(async (req, res, next) => {
     update,
   });
 });
+export const getGeneralInfo = async () => {
+  try {
+    const userId = req.user._id;
+
+    // Find the user and populate their rooms
+    // const totalUsers = await User.countDocuments();
+    const currentUser = await User.findById(userId).populate("rooms").exec();
+    if (!currentUser) {
+      return res.status(404).send("user not found");
+    }
+
+    // Get all room IDs that the current user is part of
+    const roomIds = currentUser.rooms.map((room) => room._id);
+
+    // Find other users who are in any of these rooms
+    const usersWithCommonRooms = await User.find({
+      _id: { $ne: userId }, // Exclude the current user
+      rooms: { $in: roomIds },
+      // status: { $ne: 'pending' }
+    }).exec();
+
+    res.status(200).json({
+      totalUsers: totalUsers.rooms.length,
+      currentUser,
+    });
+  } catch (error) {}
+};

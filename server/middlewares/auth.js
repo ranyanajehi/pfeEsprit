@@ -27,6 +27,10 @@ export const isAdminAuthenticated = catchAsyncErrors(async (req, res, next) => {
   next();
 });
 
+
+
+
+
 // Middleware to authenticate frontend users
 export const isStudentAuthenticated = catchAsyncErrors(
   async (req, res, next) => {

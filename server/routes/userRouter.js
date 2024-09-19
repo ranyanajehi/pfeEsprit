@@ -13,6 +13,7 @@ import {
   getPendingStudents,
   updateStudentStatus,
   getAcceptedStudents,
+  getGeneralInfo,
 } from "../controllers/userController.js";
 import { addNewAdmin } from "../controllers/userController.js";
 import {
@@ -23,7 +24,12 @@ import { upload } from "../middlewares/multer.js";
 const router = express.Router();
 
 router.post("/student/register", upload.single("file"), studentRegister);
-router.put("/update/:id", updateStudent);
+router.put(
+  "/update",
+  isStudentAuthenticated,
+  upload.single("file"),
+  updateStudent
+);
 router.put(
   "/updateCv",
   isStudentAuthenticated,
@@ -51,5 +57,6 @@ router.put(
   updateStudentStatus
 );
 router.get("/students/accepted", isAdminAuthenticated, getAcceptedStudents);
+router.get("/getInfo", isStudentAuthenticated, getGeneralInfo);
 
 export default router;
