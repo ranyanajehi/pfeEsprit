@@ -378,7 +378,7 @@ body {
   .SibeBar {
     background: #dd0d75f2;
     background-color: #ffffff;
-    left: -100%;
+
     transition: 0.3s;
   }
   .show {

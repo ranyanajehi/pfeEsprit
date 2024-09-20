@@ -26,7 +26,7 @@
 /* Inbox Styles */
 .container_chat {
   background: linear-gradient(180deg, var(--bg-color), var(--inbox-secondary));
-  /* overflow-x: hidden; */
+  overflow-x: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,18 +35,19 @@
 }
 .chat_inbox {
   background: var(--bg-color);
-  width: var(--inbox-width);
-  height: var(--inbox-height);
+  width: 100%;
+  height: 100%;
   display: flex;
   border-radius: var(--inbox-radius);
   position: relative;
+  overflow: hidden;
 }
 
 .aside_chat {
   background: #ffb6c1;
   flex-basis: 0;
   flex-grow: 1;
-  height: 100%;
+  height: 88%;
   border-top-left-radius: var(--inbox-radius);
   border-bottom-left-radius: var(--inbox-radius);
 }
@@ -105,11 +106,13 @@
 /* Our Main Content Where Conversations Will Be Listed */
 .main_chat {
   background: var(--bg-color);
-
+  height: 100%;
   flex-basis: 0;
   flex-grow: 3;
   border-top-right-radius: var(--inbox-radius);
   border-bottom-right-radius: var(--inbox-radius);
+  display: flex;
+  flex-direction: column;
 }
 
 .message-wrap {

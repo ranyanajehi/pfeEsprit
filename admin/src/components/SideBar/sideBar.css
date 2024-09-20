@@ -14,9 +14,10 @@
   align-items: flex-start;
   gap: 5px;
   transition: all 0.7s;
-  overflow: hidden;
+  /* overflow: hidden; */
   z-index: 1;
   width: 250px; /* Full width when expanded */
+  height: 100%;
 }
 
 .SideBar.collapsed {
