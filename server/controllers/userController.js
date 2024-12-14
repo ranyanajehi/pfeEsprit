@@ -4,7 +4,7 @@ import ErrorHandler, {
 } from "../middlewares/errorMiddleware.js";
 import { generateToken } from "../utils/jwtToken.js";
 import { User } from "../models/userSchema.js";
-
+import { sendVerificationEmail } from "../utils/nodeMailer.js";
 export const studentRegister = catchAsyncErrors(async (req, res, next) => {
   const { firstName, lastName, email, phone, password, genre, levelEnglish } =
     req.body;
@@ -45,19 +45,6 @@ export const studentRegister = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-
-
-
-// controllers/userController.js
-
-export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
-  const user = req.user;
-  res.status(200).json({
-    success: true,
-    user,
-  });
-});
-
 // Fonction pour obtenir les étudiants en attente
 export const getPendingStudents = catchAsyncErrors(async (req, res, next) => {
   const pendingStudents = await User.find({
@@ -84,7 +71,9 @@ export const updateStudentStatus = catchAsyncErrors(async (req, res, next) => {
   if (!student) {
     return next(new ErrorHandler("Étudiant non trouvé", 404));
   }
-
+  if (status === "Accepted" || status === "Rejected") {
+    await sendVerificationEmail(student.email, status, student.firstName);
+  }
   res.status(200).json({
     success: true,
     student,
@@ -97,7 +86,7 @@ export const getAcceptedStudents = async (req, res) => {
       status: "Accepted",
       role: "Student",
     });
-
+    await sendVerificationEmail(student.email, "Accepted", student.firstName);
     res.status(200).json({
       success: true,
       count: acceptedStudents.length,
@@ -109,11 +98,12 @@ export const getAcceptedStudents = async (req, res) => {
 };
 // update Student
 export const updateStudent = catchAsyncErrors(async (req, res, next) => {
+  const userId = req.user._id;
   const { firstName, lastName, email, phone, password, genre, levelEnglish } =
     req.body;
 
   // Vérifiez que l'utilisateur existe
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(userId);
   if (!user) {
     return next(new ErrorHandler("Utilisateur non trouvé", 404));
   }
@@ -121,7 +111,6 @@ export const updateStudent = catchAsyncErrors(async (req, res, next) => {
   // Mettre à jour les champs de l'utilisateur
   user.firstName = firstName || user.firstName;
   user.lastName = lastName || user.lastName;
-  user.email = email || user.email;
   user.phone = phone || user.phone;
   user.password = password || user.password;
   user.genre = genre || user.genre;
@@ -141,29 +130,6 @@ export const updateStudent = catchAsyncErrors(async (req, res, next) => {
     user,
   });
 });
-// Fonction de connexion pour les administrateurs
-export const adminLogin = catchAsyncErrors(async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return next(new ErrorHandler("Veuillez fournir tous les détails.", 400));
-  }
-
-  const user = await User.findOne({ email }).select("+password");
-  if (!user) {
-    return next(new ErrorHandler("Email ou mot de passe invalide.", 400));
-  }
-
-  const isPasswordMatch = await user.comparePassword(password);
-  if (!isPasswordMatch) {
-    return next(new ErrorHandler("Email ou mot de passe invalide!", 400));
-  }
-
-  if (user.role !== "Admin") {
-    return next(new ErrorHandler("Seuls les administrateurs peuvent se connecter ici!", 403));
-  }
-
-  generateToken(user, "L'administrateur a été connecté avec succès!", 201, res);
-});
 
 export const login = catchAsyncErrors(async (req, res, next) => {
   const { email, password, role } = req.body;
@@ -172,10 +138,15 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   }
 
   const user = await User.findOne({ email }).select("+password");
+  console.log("hello user",user.status);
   if (!user) {
     return next(new ErrorHandler("Mot De Passe Or Email Invalides.", 400));
   }
-
+  if (["Pending", "Rejected"].includes(user.status)) {
+    return next(
+      new ErrorHandler(`You are reject or no yet accepted by the admin`, 403)
+    );
+  }
   const isPasswordMatch = await user.comparePassword(password);
   if (!isPasswordMatch) {
     return next(new ErrorHandler("Mot De Passe Or Email Invalides!", 400));
@@ -184,24 +155,8 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   if (role !== user.role) {
     return next(new ErrorHandler("Role inconuue!", 400));
   }
-
-  user.isLoggedIn = true; // Set isLoggedIn to true
-  await user.save();
-
-  generateToken(user, "User has been logged in successfully!", 201, res);
+  generateToken(user, "Admin a été connecté avec succès.!", 201, res);
 });
-
-
-export const getLoggedInStudents = catchAsyncErrors(async (req, res, next) => {
-  const loggedInStudents = await User.find({ role: "Student", isLoggedIn: true });
-  res.status(200).json({
-    success: true,
-    count: loggedInStudents.length,
-    data: loggedInStudents,
-  });
-});
-
-
 
 export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
   const { firstName, lastName, email, phone, password, genre } = req.body;
@@ -232,10 +187,19 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
   });
 });
 export const getAllStudent = catchAsyncErrors(async (req, res, next) => {
-  const student = await User.find({ role: "Student" });
+  const page = parseInt(req.params.page) || 1; // Get page number, default to 1
+  const limit = parseInt(req.params.limit) || 5; // Items per page, default to 10
+  const Allstudent = await User.find({ role: "Student" });
+  const student = await User.find({ role: "Student" })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .exec();
   res.status(200).json({
     success: true,
     student,
+
+    currentPage: page,
+    totalPages: Math.ceil(Allstudent.length / limit),
   });
 });
 
@@ -341,3 +305,47 @@ export const logoutStudent = catchAsyncErrors(async (req, res, next) => {
       message: "L'utisateur est déconnecté avec succès. ",
     });
 });
+export const updateUserCv = catchAsyncErrors(async (req, res, next) => {
+  let studentAvatar;
+  console.log();
+  if (req.file) {
+    studentAvatar = req.file.filename;
+  }
+  const update = await User.updateOne(
+    { _id: req.user._id },
+    { ...req.body, studentAvatar }
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Informations mises à jour avec succès",
+    update,
+  });
+});
+export const getGeneralInfo = async () => {
+  try {
+    const userId = req.user._id;
+
+    // Find the user and populate their rooms
+    // const totalUsers = await User.countDocuments();
+    const currentUser = await User.findById(userId).populate("rooms").exec();
+    if (!currentUser) {
+      return res.status(404).send("user not found");
+    }
+
+    // Get all room IDs that the current user is part of
+    const roomIds = currentUser.rooms.map((room) => room._id);
+
+    // Find other users who are in any of these rooms
+    const usersWithCommonRooms = await User.find({
+      _id: { $ne: userId }, // Exclude the current user
+      rooms: { $in: roomIds },
+      // status: { $ne: 'pending' }
+    }).exec();
+
+    res.status(200).json({
+      totalUsers: totalUsers.rooms.length,
+      currentUser,
+    });
+  } catch (error) {}
+};

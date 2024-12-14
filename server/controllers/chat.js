@@ -3,9 +3,14 @@ import { Message } from "../models/message.js";
 import { Room } from "../models/room.js";
 
 export const addMessage = async function (req, res) {
+  console.log("req.body", req.body);
   const { userId, content, roomId, media } = req.body;
   let file;
   try {
+    // console.log("====================================");
+    // console.log(userId, content, roomId, media, req.file.filename);
+    // console.log("====================================");
+    // res.send("hello");
     if (["image", "video", "pdf", "audio"].includes(media)) {
       file = req.file.filename;
     }
@@ -46,10 +51,95 @@ export const removeMessage = async function (req, res) {
 };
 export const getAllMessages = async function (req, res) {
   try {
-    const messages = await Message.findMany({
+    const messages = await Message.find({
       room: req.params.roomId,
+    }).populate({
+      path: "sender",
+      model: "User",
     });
     res.status(200).send(messages);
+  } catch (error) {
+    throw error;
+  }
+};
+export const getUsersTobeConnection = async function (req, res) {
+  try {
+    const userId = req.user._id;
+    const page = parseInt(req.params.page) || 1; // Get page number, default to 1
+    const limit = parseInt(req.params.limit) || 3; // Items per page, default to 10
+    // Find the current user and populate their rooms
+    const currentUser = await User.findById(userId).populate("rooms").exec();
+    if (!currentUser) {
+      throw new Error("User not found");
+    }
+
+    // Get all room IDs that the current user is part of
+    const roomIds = currentUser.rooms.map((room) => room._id);
+
+    // Find users who are not in any of these rooms
+    const usersWithoutCommonRooms = await User.find({
+      _id: { $ne: userId }, // Exclude the current user
+      // status: { $nin: ["Pending", "Rejected"] },
+
+      rooms: { $nin: roomIds }, // Users not in any of the current user's rooms
+    })
+      .sort({ createdAt: 1 }) // Sort by the indexed field
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+    const totalUsers = await User.find({
+      _id: { $ne: userId }, // Exclude the current user
+      // status: { $nin: ["Pending", "Rejected"] },
+
+      rooms: { $nin: roomIds }, // Users not in any of the current user's rooms
+    });
+    res.send({
+      usersWithoutCommonRooms,
+      totalUsers,
+      currentPage: page,
+      totalPages: Math.ceil(totalUsers.length / limit),
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const getUsersConnections = async function (req, res) {
+  try {
+    const userId = req.user._id;
+    const page = parseInt(req.params.page) || 1; // Get page number, default to 1
+    const limit = parseInt(req.params.limit) || 3; // Items per page, default to 10
+    // Find the user and populate their rooms
+    // const totalUsers = await User.countDocuments();
+    const currentUser = await User.findById(userId).populate("rooms").exec();
+    if (!currentUser) {
+      return res.status(404).send("user not found");
+    }
+
+    // Get all room IDs that the current user is part of
+    const roomIds = currentUser.rooms.map((room) => room._id);
+
+    // Find other users who are in any of these rooms
+    const usersWithCommonRooms = await User.find({
+      _id: { $ne: userId }, // Exclude the current user
+      rooms: { $in: roomIds },
+      // status: { $ne: 'pending' }
+    })
+      // .sort({ createdAt: 1 }) // Sort by the indexed field
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+    const totalUsers = await User.find({
+      _id: { $ne: userId }, // Exclude the current user
+      rooms: { $in: roomIds },
+      // status: { $ne: 'pending' }
+    });
+    res.send({
+      usersWithCommonRooms,
+      totalUsers,
+      currentPage: page,
+      totalPages: Math.ceil(totalUsers.length / limit),
+    });
   } catch (error) {
     throw error;
   }
@@ -74,12 +164,13 @@ export const getAllRoomByUserId = async function (req, res) {
 };
 
 export const createRoom = async function (req, res) {
-  const { user1, user2 } = req.params;
+  const user2 = req.user._id;
+  const { user1 } = req.params;
 
   try {
     const commonRooms = await Room.findOne({
       users: {
-        $all: [req.params.user1, req.params.user2],
+        $all: [req.params.user1, user2],
         $size: 2,
       },
     });
@@ -101,5 +192,5 @@ export const createRoom = async function (req, res) {
     throw error;
   }
 };
-
+export const getAllMessagesByRoomId = async () => {};
 // export default s;

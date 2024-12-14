@@ -1,0 +1,42 @@
+/* Events.css */
+
+.add-event-btn {
+  position: absolute;
+  right: 60px; /* Positionne le bouton à 60px du bord droit */
+  bottom: 527px; /* Positionne le bouton à 20px du bord inférieur */
+  /* Ajustez 'bottom' pour le positionner plus haut ou plus bas selon vos besoins */
+}
+
+.add-event-btn button {
+  background-color: hsl(240, 11%, 95%);
+  border-color: rgb(15, 19, 223);
+  color: rgb(15, 19, 223);
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-top: 50px;
+  transition: background-color 0.3s ease;
+}
+
+.add-event-btn button:hover {
+  background-color: hwb(310 45% 7%);
+  border-color: #0056b3;
+}
+/* Changer la couleur de la croix en rouge */
+.modal-header .btn-close {
+  filter: invert(30%) sepia(100%) saturate(1000%) hue-rotate(0deg)
+    brightness(91%) contrast(101%);
+  opacity: 1;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  /*  */
+}
+
+.search-input {
+  width: 300px !important; /* Force la réduction de la largeur de l'input */
+
+  max-width: none; /* Empêche que la largeur max soit imposée */
+}
